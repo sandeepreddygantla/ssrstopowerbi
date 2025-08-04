@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" 
+        xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="InventoryDataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=INVENTORY-SERVER\SQLEXPRESS;Initial Catalog=INVENTORY_DB</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:DataSourceID>d2e4fbaf-6f4d-6d54-acc3-d6df9aa3ffc2</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="InventoryDataSet">
+      <Fields>
+        <Field Name="ProductID"><DataField>ProductID</DataField><rd:TypeName>System.Int32</rd:TypeName></Field>
+        <Field Name="ProductName"><DataField>ProductName</DataField><rd:TypeName>System.String</rd:TypeName></Field>
+        <Field Name="Category"><DataField>Category</DataField><rd:TypeName>System.String</rd:TypeName></Field>
+        <Field Name="StockQuantity"><DataField>StockQuantity</DataField><rd:TypeName>System.Int32</rd:TypeName></Field>
+        <Field Name="ReorderLevel"><DataField>ReorderLevel</DataField><rd:TypeName>System.Int32</rd:TypeName></Field>
+        <Field Name="UnitCost"><DataField>UnitCost</DataField><rd:TypeName>System.Double</rd:TypeName></Field>
+        <Field Name="TotalValue"><DataField>TotalValue</DataField><rd:TypeName>System.Double</rd:TypeName></Field>
+        <Field Name="LastUpdated"><DataField>LastUpdated</DataField><rd:TypeName>System.DateTime</rd:TypeName></Field>
+      </Fields>
+      <Query>
+        <DataSourceName>InventoryDataSource</DataSourceName>
+        <CommandText>SELECT ProductID, ProductName, Category, StockQuantity, ReorderLevel, 
+                            UnitCost, (StockQuantity * UnitCost) as TotalValue, LastUpdated
+                     FROM Inventory 
+                     WHERE StockQuantity > 0
+                     ORDER BY Category, ProductName</CommandText>
+      </Query>
+    </DataSet>
+  </DataSets>
+  <Body>
+    <ReportItems>
+      <Tablix Name="InventoryTablix">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn><Width>0.7in</Width></TablixColumn>
+            <TablixColumn><Width>2.2in</Width></TablixColumn>
+            <TablixColumn><Width>1.2in</Width></TablixColumn>
+            <TablixColumn><Width>0.8in</Width></TablixColumn>
+            <TablixColumn><Width>0.8in</Width></TablixColumn>
+            <TablixColumn><Width>0.8in</Width></TablixColumn>
+            <TablixColumn><Width>1in</Width></TablixColumn>
+            <TablixColumn><Width>1.2in</Width></TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell><CellContents><Textbox Name="txtProductIDHeader"><Value>ID</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtProductNameHeader"><Value>Product Name</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtCategoryHeader"><Value>Category</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtStockQtyHeader"><Value>Stock</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtReorderHeader"><Value>Reorder</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtUnitCostHeader"><Value>Cost</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtTotalValueHeader"><Value>Total Value</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtLastUpdatedHeader"><Value>Updated</Value></Textbox></CellContents></TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell><CellContents><Textbox Name="txtProductID"><Value>=Fields!ProductID.Value</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtProductName"><Value>=Fields!ProductName.Value</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtCategory"><Value>=Fields!Category.Value</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtStockQuantity"><Value>=Fields!StockQuantity.Value</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtReorderLevel"><Value>=Fields!ReorderLevel.Value</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtUnitCost"><Value>=Fields!UnitCost.Value</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtTotalValue"><Value>=Fields!TotalValue.Value</Value></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtLastUpdated"><Value>=Fields!LastUpdated.Value</Value></Textbox></CellContents></TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <DataSetName>InventoryDataSet</DataSetName>
+      </Tablix>
+    </ReportItems>
+    <Height>2in</Height>
+  </Body>
+  <Width>8.7in</Width>
+  <Page>
+    <PageWidth>11in</PageWidth>
+    <PageHeight>8.5in</PageHeight>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+  </Page>
+</Report>

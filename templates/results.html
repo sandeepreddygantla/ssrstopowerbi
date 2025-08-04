@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - RDL Migration Tool</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Embedded CSS to avoid external file loading issues -->
+    <style>
+    :root {
+        --primary-orange: #FF612B;
+        --light-cream: #FAF8F2;
+        --light-blue: #D9F6FA;
+        --navy-blue: #002677;
+        --dark-gray: #4B4D4F;
+        --white: #FFFFFF;
+    }
+
+    .modern-gradient {
+        background: linear-gradient(135deg, var(--light-cream) 0%, var(--light-blue) 100%);
+        min-height: 100vh;
+    }
+
+    .card-hover {
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    }
+
+    .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 30px rgba(255, 97, 43, 0.1);
+    }
+
+    .job-card:hover .view-btn {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 38, 119, 0.3);
+    }
+
+    .job-card:hover .download-btn {
+        transform: translateY(-2px);
+        background: var(--primary-orange);
+        color: var(--white);
+        box-shadow: 0 8px 20px rgba(255, 97, 43, 0.3);
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, var(--white) 0%, var(--light-cream) 100%);
+        border: 1px solid rgba(255, 97, 43, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-orange), var(--navy-blue));
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-orange) 0%, #FF7A47 100%);
+        border: none;
+        color: var(--white);
+        font-weight: 600;
+        letter-spacing: 0.025em;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(255, 97, 43, 0.3);
+    }
+
+    .btn-secondary {
+        background: var(--navy-blue);
+        border: 2px solid var(--navy-blue);
+        color: var(--white);
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: transparent;
+        color: var(--navy-blue);
+        transform: translateY(-2px);
+    }
+
+    .search-input {
+        border: 2px solid var(--light-blue);
+        border-radius: 12px;
+        padding: 12px 16px 12px 44px;
+        background: var(--white);
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        border-color: var(--primary-orange);
+        box-shadow: 0 0 0 3px rgba(255, 97, 43, 0.1);
+        outline: none;
+    }
+    
+    /* Code block styling for file previews */
+    .code-block {
+        background: #1f2937;
+        color: #f9fafb;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px 0;
+        overflow-x: auto;
+        border-left: 4px solid #3b82f6;
+    }
+    
+    .sql-code { border-left-color: #ef4444; }
+    .powerquery-code { border-left-color: #10b981; }
+    .dax-code { border-left-color: #f59e0b; }
+    
+    .code-block pre {
+        margin: 0;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid var(--light-blue);
+        border-top: 4px solid var(--primary-orange);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, var(--white) 0%, var(--light-cream) 50%, var(--light-blue) 100%);
+        border-radius: 24px;
+        padding: 40px;
+        margin-bottom: 40px;
+        border: 1px solid rgba(255, 97, 43, 0.1);
+    }
+
+    .results-container {
+        background: var(--white);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 38, 119, 0.1);
+    }
+
+    .modern-nav {
+        background: var(--white);
+        border-bottom: 1px solid rgba(0, 38, 119, 0.1);
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .nav-brand {
+        color: var(--navy-blue);
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .nav-brand:hover {
+        color: var(--primary-orange);
+        text-decoration: none;
+    }
+
+    .nav-links a {
+        color: var(--dark-gray);
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+        background: rgba(255, 97, 43, 0.1);
+        color: var(--primary-orange);
+    }
+
+    .nav-links a.active {
+        background: var(--primary-orange);
+        color: var(--white);
+    }
+    </style>
+</head>
+<body>
+    <!-- Modern Navigation -->
+    <nav class="modern-nav">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
+                    RDL Migration Tool
+                </a>
+                <div class="nav-links flex space-x-4">
+                    <a href="/">Dashboard</a>
+                    <a href="/migration">Migration</a>
+                    <a href="/results" class="active">Results</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="min-h-screen modern-gradient">
+        <div class="max-w-7xl mx-auto p-6">
+            <!-- Modern Header -->
+            <div class="page-header">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 class="text-4xl font-bold mb-2" style="color: var(--navy-blue);">
+                            <i class="fas fa-chart-line mr-4" style="color: var(--primary-orange);"></i>
+                            Migration Results
+                        </h1>
+                        <p class="text-lg" style="color: var(--dark-gray);">View and manage your previous migration results with ease</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="refresh-btn" class="btn-primary px-6 py-3 rounded-xl">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                        <button id="cleanup-btn" class="btn-secondary px-6 py-3 rounded-xl">
+                            <i class="fas fa-trash mr-2"></i>Cleanup Old
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Modern Statistics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="stat-card p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div id="total-jobs" class="text-3xl font-bold mb-1" style="color: var(--navy-blue);">-</div>
+                                <div class="text-sm font-medium" style="color: var(--dark-gray);">Total Jobs</div>
+                            </div>
+                            <div class="p-3 rounded-full" style="background: rgba(0, 38, 119, 0.1);">
+                                <i class="fas fa-tasks text-2xl" style="color: var(--navy-blue);"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div id="total-files" class="text-3xl font-bold mb-1" style="color: var(--primary-orange);">-</div>
+                                <div class="text-sm font-medium" style="color: var(--dark-gray);">Files Generated</div>
+                            </div>
+                            <div class="p-3 rounded-full" style="background: rgba(255, 97, 43, 0.1);">
+                                <i class="fas fa-files text-2xl" style="color: var(--primary-orange);"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div id="total-size" class="text-3xl font-bold mb-1" style="color: var(--navy-blue);">-</div>
+                                <div class="text-sm font-medium" style="color: var(--dark-gray);">Total Size</div>
+                            </div>
+                            <div class="p-3 rounded-full" style="background: rgba(217, 246, 250, 0.5);">
+                                <i class="fas fa-database text-2xl" style="color: var(--navy-blue);"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div id="latest-job" class="text-3xl font-bold mb-1" style="color: var(--primary-orange);">-</div>
+                                <div class="text-sm font-medium" style="color: var(--dark-gray);">Latest Job</div>
+                            </div>
+                            <div class="p-3 rounded-full" style="background: rgba(255, 97, 43, 0.1);">
+                                <i class="fas fa-clock text-2xl" style="color: var(--primary-orange);"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern Search and Filters -->
+            <div class="results-container mb-8">
+                <div class="p-8">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                            <div class="relative">
+                                <input type="text" id="search-input" placeholder="Search migration jobs..." 
+                                       class="search-input w-full sm:w-80">
+                                <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2" style="color: var(--dark-gray);"></i>
+                            </div>
+                            
+                            <select id="type-filter" class="search-input pl-4 w-full sm:w-auto">
+                                <option value="">All Types</option>
+                                <option value="migration">Migration</option>
+                                <option value="analysis">Analysis</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern Results Section -->
+            <div class="results-container">
+                <div class="p-8 border-b" style="border-color: var(--light-cream);">
+                    <h2 class="text-2xl font-bold flex items-center" style="color: var(--navy-blue);">
+                        <i class="fas fa-history mr-3" style="color: var(--primary-orange);"></i>
+                        Recent Migration Results
+                    </h2>
+                    <p class="mt-2" style="color: var(--dark-gray);">Manage and download your migration results</p>
+                </div>
+                
+                <!-- Loading State -->
+                <div id="loading-state" class="p-12 text-center hidden">
+                    <div class="loading-spinner mx-auto mb-6"></div>
+                    <p class="text-lg font-medium" style="color: var(--dark-gray);">Loading your results...</p>
+                </div>
+                
+                <!-- Results Grid -->
+                <div id="results-grid" class="p-8">
+                    <!-- Results will be populated here -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden p-12 text-center">
+                    <div class="mb-8">
+                        <i class="fas fa-inbox text-6xl mb-6" style="color: var(--light-blue);"></i>
+                        <h3 class="text-2xl font-bold mb-3" style="color: var(--navy-blue);">No Results Found</h3>
+                        <p class="text-lg mb-8" style="color: var(--dark-gray);">Start your first migration to see results here</p>
+                        <a href="/migration" class="btn-primary px-8 py-4 rounded-xl text-lg">
+                            <i class="fas fa-rocket mr-3"></i>Start Migration
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Details Modal -->
+    <div id="job-details-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg max-w-5xl max-h-[90vh] w-full mx-4 flex flex-col">
+            <div class="flex items-center justify-between p-6 border-b">
+                <div class="flex items-center">
+                    <h3 id="job-modal-title" class="text-xl font-semibold">Job Details</h3>
+                    <span id="job-modal-type" class="ml-4 px-2 py-1 bg-brand-blue text-white text-xs rounded-full">Migration</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="job-download-all-btn" class="bg-brand-green text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-download mr-2"></i>Download All
+                    </button>
+                    <button id="job-modal-close-btn" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="job-modal-content" class="flex-1 overflow-auto p-6">
+                <!-- Job details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Embedded JavaScript to avoid external file loading issues -->
+    <script>
+    // Embedded version of results.js with all functionality
+    class ResultsManager {
+        constructor() {
+            this.results = [];
+            this.filteredResults = [];
+            this.currentJobId = null;
+            this.init();
+        }
+        
+        init() {
+            this.loadResults();
+            this.bindEvents();
+        }
+        
+        bindEvents() {
+            // Search and filter
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    this.filterResults();
+                });
+            }
+            
+            const typeFilter = document.getElementById('type-filter');
+            if (typeFilter) {
+                typeFilter.addEventListener('change', (e) => {
+                    this.filterResults();
+                });
+            }
+            
+            // Refresh button
+            const refreshBtn = document.getElementById('refresh-btn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', () => {
+                    this.loadResults();
+                });
+            }
+            
+            // Cleanup button
+            const cleanupBtn = document.getElementById('cleanup-btn');
+            if (cleanupBtn) {
+                cleanupBtn.addEventListener('click', () => {
+                    this.showCleanupConfirm();
+                });
+            }
+            
+            // Modal close
+            const modalCloseBtn = document.getElementById('job-modal-close-btn');
+            if (modalCloseBtn) {
+                modalCloseBtn.addEventListener('click', () => {
+                    this.closeJobModal();
+                });
+            }
+            
+            // Click outside modal to close
+            const modal = document.getElementById('job-details-modal');
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target.id === 'job-details-modal') {
+                        this.closeJobModal();
+                    }
+                });
+            }
+        }
+        
+        async loadResults() {
+            try {
+                this.showLoading(true);
+                
+                const response = await fetch('/api/results/history');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    this.results = data.results;
+                    this.filteredResults = [...this.results];
+                    this.updateStatistics();
+                    this.renderResults();
+                    this.showLoading(false);
+                } else {
+                    this.showError('Failed to load results: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error loading results:', error);
+                this.showError('Error loading results: ' + error.message);
+            }
+        }
+        
+        updateStatistics() {
+            const totalJobs = this.results.length;
+            const totalFiles = this.results.reduce((sum, job) => sum + job.file_count, 0);
+            const totalSize = this.results.reduce((sum, job) => sum + job.size, 0);
+            const latestJob = this.results.length > 0 ? this.formatRelativeTime(this.results[0].created) : 'None';
+            
+            const totalJobsEl = document.getElementById('total-jobs');
+            const totalFilesEl = document.getElementById('total-files');
+            const totalSizeEl = document.getElementById('total-size');
+            const latestJobEl = document.getElementById('latest-job');
+            
+            if (totalJobsEl) totalJobsEl.textContent = totalJobs;
+            if (totalFilesEl) totalFilesEl.textContent = totalFiles;
+            if (totalSizeEl) totalSizeEl.textContent = this.formatFileSize(totalSize);
+            if (latestJobEl) latestJobEl.textContent = latestJob;
+        }
+        
+        renderResults() {
+            const resultsGrid = document.getElementById('results-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (!resultsGrid || !emptyState) return;
+            
+            if (this.filteredResults.length === 0) {
+                resultsGrid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            resultsGrid.classList.remove('hidden');
+            
+            resultsGrid.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                    ${this.filteredResults.map(job => this.renderJobCard(job)).join('')}
+                </div>
+            `;
+            
+            // Add event listeners to job cards
+            this.bindJobCardEvents();
+        }
+        
+        renderJobCard(job) {
+            const typeIcon = job.type === 'migration' ? 'fas fa-exchange-alt' : 'fas fa-search';
+            
+            return `
+                <div class="job-card p-8 card-hover cursor-pointer" data-job-id="${job.job_id}" 
+                     style="background: var(--white); border: 1px solid rgba(0, 38, 119, 0.1); border-radius: 24px; position: relative; overflow: hidden; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+                    
+                    <!-- Top gradient accent -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary-orange), var(--navy-blue));"></div>
+                    
+                    <!-- Header Section -->
+                    <div class="flex items-start justify-between mb-8">
+                        <div class="flex items-center space-x-4">
+                            <div style="padding: 16px; border-radius: 16px; background: linear-gradient(135deg, rgba(255, 97, 43, 0.1), rgba(255, 97, 43, 0.05));">
+                                <i class="${typeIcon} text-2xl" style="color: var(--primary-orange);"></i>
+                            </div>
+                            <div>
+                                <div style="background: linear-gradient(135deg, var(--primary-orange), #FF7A47); color: var(--white); padding: 8px 20px; border-radius: 25px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: inline-block;">
+                                    ${job.type.charAt(0).toUpperCase() + job.type.slice(1)}
+                                </div>
+                                <div class="text-sm font-medium" style="color: var(--dark-gray);">
+                                    <i class="fas fa-calendar-alt mr-2"></i>${this.formatDate(job.created)}
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: var(--light-blue); color: var(--navy-blue); padding: 12px 20px; border-radius: 16px; font-size: 14px; font-weight: 700; box-shadow: 0 2px 8px rgba(217, 246, 250, 0.3);">
+                            <i class="fas fa-files mr-2"></i>${job.file_count} files
+                        </div>
+                    </div>
+                    
+                    <!-- Info Section -->
+                    <div class="space-y-4 mb-8">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--light-cream);">
+                            <span class="font-semibold" style="color: var(--dark-gray); display: flex; align-items: center;">
+                                <i class="fas fa-fingerprint mr-3" style="color: var(--primary-orange);"></i>Job ID:
+                            </span>
+                            <span class="font-mono text-sm px-3 py-1 rounded-lg" style="background: var(--light-cream); color: var(--navy-blue); font-weight: 600;" title="${job.job_id}">
+                                ${job.job_id.substring(0, 12)}...
+                            </span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--light-cream);">
+                            <span class="font-semibold" style="color: var(--dark-gray); display: flex; align-items: center;">
+                                <i class="fas fa-database mr-3" style="color: var(--navy-blue);"></i>Size:
+                            </span>
+                            <span class="font-bold text-lg" style="color: var(--navy-blue);">${this.formatFileSize(job.size)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                            <span class="font-semibold" style="color: var(--dark-gray); display: flex; align-items: center;">
+                                <i class="fas fa-clock mr-3" style="color: var(--primary-orange);"></i>Modified:
+                            </span>
+                            <span class="font-bold text-lg" style="color: var(--primary-orange);">${this.formatRelativeTime(job.modified)}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-4">
+                        <button class="view-btn flex-1 font-semibold py-4 px-6 rounded-xl transition-all duration-300" 
+                                style="background: linear-gradient(135deg, var(--navy-blue) 0%, #1a3a8a 100%); color: var(--white); border: none; box-shadow: 0 4px 12px rgba(0, 38, 119, 0.2);">
+                            <i class="fas fa-eye mr-3"></i>View Files
+                        </button>
+                        <button class="download-btn font-semibold py-4 px-6 rounded-xl transition-all duration-300" 
+                                style="background: transparent; color: var(--primary-orange); border: 2px solid var(--primary-orange); box-shadow: 0 4px 12px rgba(255, 97, 43, 0.1);">
+                            <i class="fas fa-download mr-2"></i>Download
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        bindJobCardEvents() {
+            // View buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const jobCard = e.target.closest('.job-card');
+                    const jobId = jobCard.dataset.jobId;
+                    this.showJobDetails(jobId);
+                });
+            });
+            
+            // Download buttons
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const jobCard = e.target.closest('.job-card');
+                    const jobId = jobCard.dataset.jobId;
+                    window.location.href = `/api/download/${jobId}`;
+                });
+            });
+            
+            // Job card click
+            document.querySelectorAll('.job-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const jobId = card.dataset.jobId;
+                    this.showJobDetails(jobId);
+                });
+            });
+        }
+        
+        showLoading(show) {
+            const loadingState = document.getElementById('loading-state');
+            const resultsGrid = document.getElementById('results-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (show) {
+                if (loadingState) loadingState.classList.remove('hidden');
+                if (resultsGrid) resultsGrid.classList.add('hidden');
+                if (emptyState) emptyState.classList.add('hidden');
+            } else {
+                if (loadingState) loadingState.classList.add('hidden');
+                if (resultsGrid) resultsGrid.classList.remove('hidden');
+            }
+        }
+        
+        showError(message) {
+            console.error(message);
+            this.showLoading(false);
+            
+            const resultsGrid = document.getElementById('results-grid');
+            if (resultsGrid) {
+                resultsGrid.innerHTML = `
+                    <div class="p-8 text-center text-red-600">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                        <p>${message}</p>
+                    </div>
+                `;
+                resultsGrid.classList.remove('hidden');
+            }
+        }
+        
+        // Utility methods
+        formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        formatDate(timestamp) {
+            return new Date(timestamp * 1000).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        formatRelativeTime(timestamp) {
+            const now = Date.now();
+            const time = timestamp * 1000;
+            const diff = now - time;
+            
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            if (days < 7) return `${days}d ago`;
+            
+            return this.formatDate(timestamp);
+        }
+        
+        filterResults() {
+            const searchTerm = document.getElementById('search-input')?.value.toLowerCase() || '';
+            const typeFilter = document.getElementById('type-filter')?.value || '';
+            
+            this.filteredResults = this.results.filter(job => {
+                const matchesSearch = job.job_id.toLowerCase().includes(searchTerm);
+                const matchesType = !typeFilter || job.type === typeFilter;
+                
+                return matchesSearch && matchesType;
+            });
+            
+            this.renderResults();
+        }
+        
+        async showJobDetails(jobId) {
+            try {
+                this.currentJobId = jobId;
+                
+                // Load job files
+                const response = await fetch(`/api/results/${jobId}/files`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    this.showError('Failed to load job files: ' + data.error);
+                    return;
+                }
+                
+                this.currentJobFiles = data.files;
+                this.renderJobModal(jobId, data);
+                
+                // Show modal
+                const modal = document.getElementById('job-details-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error loading job details:', error);
+                this.showError('Error loading job details: ' + error.message);
+            }
+        }
+        
+        renderJobModal(jobId, data) {
+            const modal = document.getElementById('job-details-modal');
+            if (!modal) return;
+            
+            // Organize files by type
+            const filesByType = {
+                'Migration Guide': data.files.filter(f => f.path.includes('migration_guide.md') || f.path.includes('guides/')),
+                'Power Query': data.files.filter(f => f.name.endsWith('.m')),
+                'DAX Measures': data.files.filter(f => f.name.endsWith('.dax')),
+                'Validation': data.files.filter(f => f.name.endsWith('.sql') || f.path.includes('validation/')),
+                'Other Files': data.files.filter(f => !f.name.endsWith('.md') && !f.name.endsWith('.m') && !f.name.endsWith('.dax') && !f.name.endsWith('.sql'))
+            };
+            
+            // Find migration guide specifically
+            const migrationGuide = data.files.find(f => f.path.includes('migration_guide.md'));
+            
+            modal.innerHTML = `
+                <div class="fixed inset-0 z-50 overflow-y-auto">
+                    <div class="flex min-h-screen items-center justify-center p-4">
+                        <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+                        <div class="relative bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                            
+                            <!-- Header -->
+                            <div class="flex items-center justify-between p-6 border-b border-gray-200" style="background: linear-gradient(135deg, var(--light-cream), var(--light-blue));">
+                                <div class="flex items-center space-x-4">
+                                    <div style="padding: 12px; border-radius: 12px; background: var(--primary-orange);">
+                                        <i class="fas fa-folder-open text-xl text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-2xl font-bold" style="color: var(--navy-blue);">Migration Results</h2>
+                                        <p class="text-sm" style="color: var(--dark-gray);">Job ID: ${jobId}</p>
+                                    </div>
+                                </div>
+                                <button id="job-modal-close-btn" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <i class="fas fa-times text-xl" style="color: var(--dark-gray);"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Content Area -->
+                            <div class="flex h-[calc(90vh-80px)]">
+                                
+                                <!-- File Browser Sidebar -->
+                                <div class="w-1/3 border-r border-gray-200 overflow-y-auto" style="background: #fafafa;">
+                                    <div class="p-4">
+                                        <div class="mb-6">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <h3 class="font-semibold text-lg" style="color: var(--navy-blue);">📁 ${data.total_files} Files</h3>
+                                                <span class="text-sm px-2 py-1 rounded" style="background: var(--light-blue); color: var(--navy-blue);">${this.formatFileSize(data.total_size)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        ${migrationGuide ? `
+                                        <!-- Migration Guide Highlight -->
+                                        <div class="mb-6 p-4 rounded-xl border-2 border-dashed" style="border-color: var(--primary-orange); background: rgba(255, 97, 43, 0.05);">
+                                            <div class="flex items-center mb-2">
+                                                <i class="fas fa-star mr-2" style="color: var(--primary-orange);"></i>
+                                                <span class="font-semibold" style="color: var(--primary-orange);">Featured</span>
+                                            </div>
+                                            <button class="file-preview-btn w-full text-left p-3 rounded-lg hover:bg-white transition-colors" 
+                                                    data-file-path="${migrationGuide.path}" style="background: rgba(255, 255, 255, 0.7);">
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-book-open mr-3 text-2xl" style="color: var(--primary-orange);"></i>
+                                                    <div>
+                                                        <div class="font-semibold" style="color: var(--navy-blue);">📋 Migration Guide</div>
+                                                        <div class="text-sm" style="color: var(--dark-gray);">Step-by-step instructions</div>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        <!-- File Categories -->
+                                        ${Object.entries(filesByType).map(([category, files]) => {
+                                            if (files.length === 0) return '';
+                                            
+                                            const icons = {
+                                                'Migration Guide': 'fas fa-book-open',
+                                                'Power Query': 'fas fa-database',
+                                                'DAX Measures': 'fas fa-calculator',
+                                                'Validation': 'fas fa-check-circle',
+                                                'Other Files': 'fas fa-file'
+                                            };
+                                            
+                                            return `
+                                                <div class="mb-4">
+                                                    <h4 class="font-semibold mb-2 text-sm uppercase tracking-wide" style="color: var(--dark-gray);">
+                                                        <i class="${icons[category]} mr-2"></i>${category} (${files.length})
+                                                    </h4>
+                                                    <div class="space-y-1">
+                                                        ${files.map(file => `
+                                                            <button class="file-preview-btn w-full text-left p-2 rounded-lg hover:bg-white transition-colors" 
+                                                                    data-file-path="${file.path}">
+                                                                <div class="flex items-center justify-between">
+                                                                    <div class="flex items-center min-w-0 flex-1">
+                                                                        <i class="fas fa-file-alt mr-2 text-sm" style="color: var(--primary-orange);"></i>
+                                                                        <span class="text-sm truncate" style="color: var(--navy-blue);">${file.name}</span>
+                                                                    </div>
+                                                                    <span class="text-xs ml-2 flex-shrink-0" style="color: var(--dark-gray);">${this.formatFileSize(file.size)}</span>
+                                                                </div>
+                                                            </button>
+                                                        `).join('')}
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                                
+                                <!-- File Preview Area -->
+                                <div class="flex-1 overflow-hidden">
+                                    <div id="file-preview-area" class="h-full flex items-center justify-center" style="background: #f8f9fa;">
+                                        <div class="text-center">
+                                            <i class="fas fa-hand-pointer text-6xl mb-4" style="color: var(--primary-orange); opacity: 0.5;"></i>
+                                            <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Select a file to preview</h3>
+                                            <p style="color: var(--dark-gray);">Click on any file from the sidebar to view its contents</p>
+                                            ${migrationGuide ? `
+                                                <div class="mt-6">
+                                                    <button class="file-preview-btn px-6 py-3 rounded-xl font-semibold transition-all duration-300" 
+                                                            data-file-path="${migrationGuide.path}"
+                                                            style="background: var(--primary-orange); color: white; box-shadow: 0 4px 12px rgba(255, 97, 43, 0.3);">
+                                                        <i class="fas fa-book-open mr-2"></i>View Migration Guide
+                                                    </button>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Bind file preview events
+            this.bindFilePreviewEvents();
+        }
+        
+        bindFilePreviewEvents() {
+            document.querySelectorAll('.file-preview-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const filePath = btn.dataset.filePath;
+                    this.previewFile(filePath);
+                });
+            });
+        }
+        
+        async previewFile(filePath) {
+            try {
+                const previewArea = document.getElementById('file-preview-area');
+                if (!previewArea) return;
+                
+                // Show loading
+                previewArea.innerHTML = `
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style="border-color: var(--primary-orange);"></div>
+                        <p style="color: var(--dark-gray);">Loading file preview...</p>
+                    </div>
+                `;
+                
+                const response = await fetch(`/api/results/${this.currentJobId}/preview/${filePath}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    previewArea.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-triangle text-6xl mb-4" style="color: #ef4444; opacity: 0.5;"></i>
+                            <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Preview Error</h3>
+                            <p style="color: var(--dark-gray);">${data.error}</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Render file content based on type
+                let content = '';
+                
+                if (data.type === 'html') {
+                    // Enhanced markdown with our beautiful styling
+                    content = `
+                        <div class="h-full overflow-y-auto p-6">
+                            <div class="max-w-4xl mx-auto">
+                                <div class="mb-4 flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold flex items-center" style="color: var(--navy-blue);">
+                                        ${data.preview_title || '📄 Document Preview'}
+                                    </h3>
+                                    ${data.is_migration_doc ? `
+                                        <div class="px-3 py-1 rounded-full text-sm font-medium" style="background: var(--primary-orange); color: white;">
+                                            <i class="fas fa-star mr-1"></i>Migration Guide
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                ${data.content}
+                            </div>
+                        </div>
+                    `;
+                } else if (data.type === 'text') {
+                    // Code files with syntax highlighting
+                    const language = data.file_type === '.sql' ? 'sql' : 
+                                   data.file_type === '.dax' ? 'dax' : 
+                                   data.file_type === '.m' ? 'powerquery' : 'text';
+                    
+                    content = `
+                        <div class="h-full overflow-y-auto p-6">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold flex items-center" style="color: var(--navy-blue);">
+                                    <i class="fas fa-code mr-2"></i>Code Preview
+                                </h3>
+                            </div>
+                            <div class="code-block ${language}-code">
+                                <pre><code class="language-${language}">${this.escapeHtml(data.content)}</code></pre>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    content = `
+                        <div class="text-center">
+                            <i class="fas fa-file text-6xl mb-4" style="color: var(--dark-gray); opacity: 0.5;"></i>
+                            <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">File Preview</h3>
+                            <p style="color: var(--dark-gray);">This file type cannot be previewed directly.</p>
+                            <div class="mt-4">
+                                <a href="/api/results/${this.currentJobId}/download/${filePath}" 
+                                   class="px-4 py-2 rounded-lg font-semibold" 
+                                   style="background: var(--primary-orange); color: white;">
+                                    <i class="fas fa-download mr-2"></i>Download File
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                previewArea.innerHTML = content;
+                
+            } catch (error) {
+                console.error('Error previewing file:', error);
+                const previewArea = document.getElementById('file-preview-area');
+                if (previewArea) {
+                    previewArea.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-triangle text-6xl mb-4" style="color: #ef4444; opacity: 0.5;"></i>
+                            <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Preview Error</h3>
+                            <p style="color: var(--dark-gray);">Error loading file preview: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        closeJobModal() {
+            const modal = document.getElementById('job-details-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+            this.currentJobId = null;
+        }
+        
+        showCleanupConfirm() {
+            if (confirm('Are you sure you want to delete old migration results? This action cannot be undone.')) {
+                console.log('Cleanup confirmed');
+            }
+        }
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('🎯 Initializing Standalone Results Manager (External Access Compatible)');
+        new ResultsManager();
+    });
+    </script>
+</body>
+</html>

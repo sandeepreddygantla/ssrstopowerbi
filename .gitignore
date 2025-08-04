@@ -1,0 +1,69 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+virtualenv/
+
+# Package files
+*.whl
+*.tar.gz
+Pipfile
+Pipfile.lock
+poetry.lock
+
+# Logs
+*.log
+server.log
+
+# Uploads and results (generated content)
+uploads/
+results/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation files (not needed in repo)
+*.md
+!README.md
+!CLAUDE.md
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+CLAUDE.md
