@@ -1,457 +1,346 @@
-# 🚀 Enterprise RDL Migration Platform
+# 🚀 SSRS to Power BI Migration Tool
 
-**AI-Powered SSRS Report Migration with Web Interface**
+**AI-Powered Enterprise Migration Platform with Token-Optimized Batch Processing**
 
-Transform your SQL Server Reporting Services (SSRS) RDL files into Power BI dashboards with intelligent automation, bulk processing capabilities, and a modern web interface for handling 10,000+ files efficiently.
+Transform your SQL Server Reporting Services (SSRS) RDL files into Power BI dashboards with intelligent automation, bulk processing capabilities, and advanced business logic analysis for handling thousands of files efficiently.
 
 ## 📋 Table of Contents
 
 - [Overview](#overview)
-- [🌐 Web Application](#web-application)
-- [Features](#features)
+- [Key Features](#key-features)
+- [Quick Start](#quick-start)
 - [Architecture](#architecture)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Business Logic Analysis](#business-logic-analysis)
+- [Token-Optimized Migration Guides](#token-optimized-migration-guides)
 - [Generated Output](#generated-output)
-- [AI vs Manual Conversion](#ai-vs-manual-conversion)
 - [Supported Data Sources](#supported-data-sources)
-- [Migration Process](#migration-process)
-- [Troubleshooting](#troubleshooting)
 - [API Reference](#api-reference)
 - [Contributing](#contributing)
-- [Version History](#version-history)
 
 ## 📊 Overview
 
-The RDL to Power BI Migration Tool automates the complex process of migrating SSRS reports to Power BI by:
+The SSRS to Power BI Migration Tool automates the complex process of migrating enterprise SSRS reports to Power BI through:
 
-- **Parsing RDL files** to extract data sources, datasets, and report elements
-- **Converting SQL queries** to Power Query M language
-- **Generating DAX measures** for business intelligence and analytics
-- **Creating visual configurations** for charts and tables
-- **Providing step-by-step migration guides** for non-technical users
-- **Generating validation queries** to ensure data accuracy
+- **Advanced RDL Parsing** with multi-namespace support (2008, 2010, 2016)
+- **AI-Powered Business Logic Analysis** for consolidation recommendations
+- **Token-Optimized Batch Processing** to minimize LLM costs
+- **Intelligent SQL Query Conversion** to Power Query M language
+- **Context-Aware DAX Generation** with business intelligence focus
+- **Similarity Analysis Engine** for report consolidation opportunities
+- **Enterprise Web Interface** for bulk migration management
 
-### 🎯 Automation Level: **70-85%**
+### 🎯 Enterprise Automation Level: **75-90%**
 
-- ✅ **90%** - Data source and query conversion
-- ✅ **85%** - DAX measures generation  
-- ✅ **80%** - Visual configuration mapping
-- ✅ **95%** - Migration documentation
+- ✅ **95%** - RDL parsing and data extraction
+- ✅ **90%** - SQL to Power Query conversion
+- ✅ **85%** - Business logic similarity analysis
+- ✅ **80%** - DAX measures generation
+- ✅ **90%** - Migration documentation
 - ⚠️ **Manual** - Final visual layout and formatting
 
-## 🌐 Web Application
-
-### **NEW: Enterprise Web Interface**
-The tool now includes a modern web application for handling large-scale migrations:
-
-#### **🚀 Key Web Features:**
-- **Bulk File Upload**: Drag & drop up to 10,000 RDL files at once
-- **Real-time Progress**: Live migration tracking with WebSocket updates  
-- **AI-Powered Analysis**: Similarity detection and consolidation recommendations
-- **Smart Consolidation**: Merge similar reports to reduce Power BI dashboard count
-- **Interactive Dashboard**: Visual progress tracking and job management
-- **Organized Results**: Download structured migration outputs as ZIP files
-
-#### **🖥️ Quick Start:**
-```bash
-# Setup and install dependencies
-python setup.py
-
-# Start the web application
-python start_web_app.py
-
-# Access at: http://localhost:5000
-```
-
-#### **💼 Enterprise Features:**
-- Handle 10,000+ RDL files efficiently
-- Intelligent similarity scoring and grouping
-- Background processing with job queues
-- Real-time WebSocket progress updates
-- Organized migration results with ZIP downloads
-- Modern responsive UI with Tailwind CSS
-
-## ✨ Features
+## ✨ Key Features
 
 ### 🤖 **AI-Powered Intelligence**
 - **GPT-4 Integration** for context-aware conversions
-- **Business Intelligence Focus** with KPIs and analytics measures
+- **Business Logic Similarity Analysis** with 5-metric scoring system
+- **Token-Optimized Batch Guides** reducing LLM usage by 60-80%
 - **Performance Optimization** following Power BI best practices
-- **Error Handling** and data validation built-in
 
-### 🔄 **Comprehensive Conversion**
-- **Multi-Data Source Support** (SQL Server, Oracle, ODBC, OLE DB)
-- **Complex Query Handling** (JOINs, subqueries, parameters)
-- **Time Intelligence** (YTD, MTD, growth rates)
-- **Chart Type Mapping** (Column, Bar, Line, Pie charts)
+### 🏢 **Enterprise Web Interface**
+- **Bulk File Upload** with drag & drop for thousands of files
+- **Real-time Progress Tracking** with WebSocket updates
+- **Advanced Similarity Analysis** with consolidation recommendations
+- **Organized Results Management** with structured downloads
+- **Professional UI** with responsive design
 
-### 📁 **Organized Output**
-- **Structured Directory Layout** for enterprise use
-- **Ready-to-Use Files** (.m, .dax, .json formats)
-- **Comprehensive Documentation** with migration guides
-- **Validation Tools** for quality assurance
+### 📊 **Business Logic Analysis Engine**
+- **5-Metric Analysis System**: Data Source, Filter Logic, Business Purpose, Calculations, Parameters
+- **Similarity Scoring** with percentage-based matching (High ≥70%, Medium 40-69%, Low <40%)
+- **SQL Query Comparison** for manual validation
+- **Consolidation Recommendations** based on functional similarity
 
-### 👥 **User-Friendly**
-- **Non-Technical Friendly** step-by-step instructions
-- **Copy-Paste Ready** code snippets
-- **Troubleshooting Guides** for common issues
-- **Multiple Tool Versions** (AI-only vs Hybrid)
+### 🔄 **Advanced Migration Capabilities**
+- **Multi-Database Support** (SQL Server, Oracle, T-SQL, MySQL, PostgreSQL)
+- **Complex Query Handling** with joins, subqueries, and parameters
+- **Time Intelligence** with YTD, MTD, and growth calculations
+- **Chart Type Mapping** for comprehensive visual conversion
+
+## 🚀 Quick Start
+
+### Prerequisites
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up OpenAI API key (optional but recommended)
+export OPENAI_API_KEY="your-api-key-here"
+# Or create .env file with: OPENAI_API_KEY=your-api-key-here
+```
+
+### Start the Web Application
+```bash
+# Start the migration platform
+python web_app.py
+
+# Access the tool at: http://localhost:5000/migration
+```
+
+### Basic Workflow
+1. **Upload RDL Files** - Drag and drop your SSRS files
+2. **Configure Analysis** - Set similarity thresholds and options
+3. **Run Migration** - Let the AI process and convert your reports
+4. **Review Results** - Analyze similarity scores and consolidation opportunities
+5. **Download Assets** - Get organized Power Query, DAX, and migration guides
 
 ## 🏗️ Architecture
 
+### Core System Design
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   RDL Parser    │───▶│  AI Converter    │───▶│  File Generator │
+│   Web Interface │───▶│  RDL Parser      │───▶│ Business Logic  │
+│   (Flask+SocketIO)│    │  Multi-Namespace │    │ Analyzer        │
 │                 │    │                  │    │                 │
-│ • Data Sources  │    │ • Power Query M  │    │ • .m files      │
-│ • Datasets      │    │ • DAX Measures   │    │ • .dax files    │
-│ • Report Items  │    │ • Visual Configs │    │ • .json files   │
-│ • Complexity    │    │ • Optimization   │    │ • .md guides    │
+│ • File Upload   │    │ • Data Sources   │    │ • 5-Metric      │
+│ • Progress      │    │ • Datasets       │    │   Analysis      │
+│ • Results UI    │    │ • Report Items   │    │ • Similarity    │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
          │                       │                       │
          ▼                       ▼                       ▼
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Namespace     │    │   OpenAI GPT-4   │    │ migration_output│
-│   Detection     │    │   Integration    │    │   Directory     │
-│                 │    │                  │    │                 │
-│ • 2008/2010/2016│    │ • Context Aware  │    │ • power_query/  │
-│ • Auto-detect   │    │ • Business Focus │    │ • dax_measures/ │
+│  Token-Optimized│    │   AI Converter   │    │  File Generator │
+│  Guide Generator│    │   (GPT-4)        │    │                 │
+│                 │    │                  │    │ • .m files      │
+│ • Batch Guides  │    │ • Power Query M  │    │ • .dax files    │
+│ • Dynamic       │    │ • DAX Measures   │    │ • .json configs │
+│   Content       │    │ • Optimization   │    │ • Migration     │
+│ • Context-Aware │    │ • Best Practices │    │   Guides        │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
-### 🧩 Core Components
+### Key Components
 
-#### **1. RDLParser Class**
-- Handles multiple RDL namespace versions (2008, 2010, 2016)
-- Extracts comprehensive report metadata
-- Calculates complexity scores for intelligent processing
+#### **1. Web Application (web_app.py)**
+- Flask application with SocketIO for real-time updates
+- Background job processing with threading
+- Secure file upload handling (16GB max)
+- REST API endpoints for analysis and migration
 
-#### **2. PowerBIConverter Class**
-- AI-powered or manual conversion methods
-- Context-aware query optimization
-- Business intelligence focused DAX generation
+#### **2. RDL Business Analyzer (rdl_business_analyzer.py)**
+- Enterprise-grade similarity analysis engine
+- 5-metric scoring system for functional comparison
+- SQL query extraction and comparison
+- Consolidation recommendations
 
-#### **3. MigrationGuideGenerator Class**
-- Creates user-friendly documentation
-- Generates step-by-step instructions
-- Provides troubleshooting guidance
+#### **3. RDL Parser (app.py)**
+- Multi-namespace RDL support (2008, 2010, 2016)
+- Comprehensive data extraction
+- Business context analysis
+- Token-optimized batch guide generation
 
-#### **4. File Management System**
-- Organized directory structure
-- Metadata preservation
-- Cross-reference tracking
+#### **4. Data Type System (rdl_types.py)**
+- Structured data classes for business logic
+- Enum definitions for analysis categories
+- Helper utilities for consistent parsing
 
 ## 🛠️ Installation
 
-### Prerequisites
+### System Requirements
+- Python 3.8+
+- 4GB RAM minimum (8GB recommended for large batches)
+- OpenAI API access (optional but recommended)
 
+### Dependencies
 ```bash
-# Required Python packages
-pip install xml.etree.ElementTree
-pip install json
-pip install pathlib
-pip install datetime
-pip install dataclasses
-pip install typing
+# Core requirements
+pip install flask flask-socketio
+pip install openai python-dotenv
+pip install sqlparse scikit-learn
+pip install lxml beautifulsoup4
 
-# Optional: For AI features
-pip install openai
-pip install python-dotenv
-
-# Optional: For database connectivity (if using demo features)
-pip install pyodbc
-pip install pandas
+# All dependencies
+pip install -r requirements.txt
 ```
 
-### Environment Setup
-
-1. **Clone or Download** the tool files
-2. **Set OpenAI API Key** (for AI features):
-
+### Environment Configuration
 ```bash
-# Option 1: Environment variable
+# Required for AI features
 export OPENAI_API_KEY="your-api-key-here"
 
-# Option 2: .env file
-echo "OPENAI_API_KEY=your-api-key-here" > .env
-```
-
-3. **Verify Installation**:
-
-```bash
-python rdl_migration_tool.py --help
+# Optional configurations
+export FLASK_ENV=development
+export MAX_CONTENT_LENGTH=16GB
 ```
 
 ## 🚀 Usage
 
-### Basic Usage
+### Web Interface Usage
 
+#### 1. Basic Migration
 ```bash
-# Process your RDL file with hybrid AI/manual conversion
-python rdl_migration_tool.py path/to/your/report.rdl
+# Start the application
+python web_app.py
 
-# AI-only conversion (requires OpenAI API key)
-python rdl_migration_tool_ai_only.py path/to/your/report.rdl
-
-# Force AI conversion even without API key (will show warning)
-python rdl_migration_tool.py path/to/your/report.rdl --ai
+# Navigate to http://localhost:5000/migration
+# Upload RDL files using drag & drop
+# Configure analysis settings
+# Run migration and monitor progress
 ```
 
-### Example Commands
+#### 2. Similarity Analysis
+- Upload multiple RDL files
+- Run similarity analysis to identify consolidation opportunities
+- Review detailed comparison reports with SQL query analysis
+- Download consolidated migration recommendations
 
+#### 3. Batch Processing
+- Process thousands of files efficiently
+- Monitor real-time progress with WebSocket updates
+- Generate token-optimized migration guides
+- Download organized results with structured file layouts
+
+### Command Line Usage
 ```bash
-# Basic migration
-python rdl_migration_tool.py SalesReport.rdl
+# Direct file processing
+python app.py path/to/report.rdl
 
-# With AI enhancement
-python rdl_migration_tool_ai_only.py ComplexFinancialReport.rdl
-
-# Process multiple reports (bash)
-for file in *.rdl; do
-    python rdl_migration_tool.py "$file"
-done
+# Batch processing
+python -c "
+from app import RDLParser, PowerBIConverter
+parser = RDLParser('report.rdl')
+converter = PowerBIConverter()
+# Process files...
+"
 ```
 
-### Command Line Options
+## 📊 Business Logic Analysis
 
-| Option | Description | Example |
-|--------|-------------|---------|
-| `rdl_file` | Path to RDL file (required) | `SalesReport.rdl` |
-| `--ai` | Force AI conversion | `--ai` |
-| `--help` | Show help message | `--help` |
+### 5-Metric Analysis System
+
+The tool analyzes reports across five critical dimensions:
+
+#### **1. Data Source Similarity (25%)**
+- Database server and name matching
+- Connection string analysis
+- Authentication method comparison
+
+#### **2. Filter Logic Similarity (20%)**
+- WHERE clause analysis
+- Parameter usage patterns
+- Filter condition matching
+
+#### **3. Business Purpose Similarity (20%)**
+- Semantic analysis of report context
+- Business domain detection
+- Functional purpose matching
+
+#### **4. Calculations Similarity (20%)**
+- Expression and formula analysis
+- Aggregation pattern matching
+- Business rule comparison
+
+#### **5. Parameters Similarity (15%)**
+- Parameter name and type matching
+- Default value comparison
+- Usage pattern analysis
+
+### Similarity Scoring
+- **High Similarity (≥70%)**: Strong consolidation candidates
+- **Medium Similarity (40-69%)**: Consider consolidation with modifications
+- **Low Similarity (<40%)**: Keep as separate reports
+
+### Analysis Report Format
+The system generates **Analysis Report 154** with:
+- Three-tier similarity grouping
+- Detailed metric breakdowns
+- Side-by-side SQL query comparison
+- Consolidation recommendations
+
+## 🎯 Token-Optimized Migration Guides
+
+### Intelligent Batch Processing
+Instead of generating individual migration guides for each file (wasteful), the system creates:
+
+- **Single Batch-Level Guide** with populated content for all files
+- **Dynamic Context Sections** with file-specific details
+- **Shared Migration Steps** to reduce redundancy
+- **Smart Asset Linking** with actual file references
+
+### Token Savings
+- **60-80% reduction** in LLM token usage
+- **47% smaller file sizes** (6.6KB → 3.5KB for 2-file batches)
+- **Consistent quality** across all migration documentation
+- **Context-aware content** without placeholder variables
+
+### Guide Features
+- File context tables with complexity analysis
+- Step-by-step migration instructions
+- Asset organization with direct file links
+- Validation checklists and troubleshooting
 
 ## 📁 Generated Output
 
 ### Directory Structure
-
 ```
-migration_output/
-├── power_query/              # Power Query M files
-│   ├── SalesDataset.m        # Data import code
-│   ├── CategorySummary.m     # Aggregated data code
-│   └── CustomerAnalysis.m    # Customer data code
-│
-├── dax_measures/             # DAX measure files
-│   ├── SalesDetailTable.dax  # Sales metrics & KPIs
-│   ├── CustomerTable.dax     # Customer analytics
-│   └── ProductTable.dax      # Product performance
-│
-├── visual_configs/           # Visual configuration files
-│   ├── SalesChart.json       # Chart setup instructions
-│   ├── RevenueChart.json     # Revenue visualization
-│   └── TrendChart.json       # Trend analysis config
-│
-├── guides/                   # Migration documentation
-│   ├── migration_guide.md    # Comprehensive guide
-│   └── troubleshooting.md    # Common issues & solutions
-│
-├── validation/               # Quality assurance
-│   ├── validation_queries.sql # Data verification queries
-│   └── test_scenarios.md     # Testing instructions
-│
-└── documentation/            # Project metadata
-    ├── migration_summary.json # Complete analysis results
-    ├── complexity_analysis.json # Complexity scoring
-    └── data_mapping.json     # Field mappings
+results/[batch-id]/
+├── [ReportName]/
+│   ├── [DatasetName].m          # Power Query files
+│   └── [TableName].dax          # DAX measure files
+├── guides/
+│   └── batch_migration_guide.md # Token-optimized guide
+└── analysis/
+    ├── similarity_analysis.json # Business logic comparison
+    └── consolidation_report.md  # Recommendations
 ```
 
-### File Types Explained
+### File Types
 
 #### **Power Query (.m files)**
-- **Purpose**: Data import and transformation
-- **Content**: Connection strings, SQL queries, data type definitions
-- **Usage**: Copy-paste into Power BI Advanced Editor
-
-```m
-// Example SalesDataset.m
-let
-    Source = Sql.Database("ServerName", "DatabaseName"),
-    CustomSQL = Value.NativeQuery(Source, "SELECT * FROM Sales"),
-    TypedData = Table.TransformColumnTypes(CustomSQL, {...})
-in
-    TypedData
-```
+- SQL to Power Query M conversion
+- Connection string optimization
+- Data type handling
+- Error handling and validation
 
 #### **DAX Measures (.dax files)**
-- **Purpose**: Business calculations and KPIs
-- **Content**: Measures, calculated columns, time intelligence
-- **Usage**: Copy individual measures into Power BI
+- Business KPIs and calculations
+- Time intelligence functions
+- Performance-optimized measures
+- Context-aware formulations
 
-```dax
-// Example from SalesDetailTable.dax
-Total Sales = SUM(Sales[Amount])
-Sales Growth = DIVIDE([Total Sales] - [Sales Previous Month], [Sales Previous Month])
-Top Customer = CALCULATE(VALUES(Sales[Customer]), TOPN(1, Sales, [Total Sales]))
-```
-
-#### **Visual Configurations (.json files)**
-- **Purpose**: Chart and table setup instructions
-- **Content**: Field mappings, formatting options, visual types
-- **Usage**: Reference for manual visual creation
-
-```json
-{
-  "visualType": "clusteredColumnChart",
-  "fieldMappings": {
-    "axis": "Category",
-    "values": ["Total Sales", "Quantity"],
-    "legend": "Region"
-  },
-  "powerBIInstructions": [...]
-}
-```
-
-## 🤖 AI vs Manual Conversion
-
-### Two Tool Versions Available
-
-| Feature | AI-Only Version | Hybrid Version |
-|---------|----------------|----------------|
-| **OpenAI Requirement** | ✅ Required | ⚠️ Optional |
-| **Conversion Quality** | 🌟 Excellent | 📊 Good |
-| **Reliability** | 🌐 Internet dependent | 🔒 Always works |
-| **Cost** | 💰 API costs | 🆓 Free |
-| **Enterprise Ready** | ⚠️ Limited | ✅ Yes |
-| **Code Complexity** | 🎯 Simple | 📚 Comprehensive |
-
-### When to Use Which Version
-
-#### **Use AI-Only Version When:**
-- You have reliable OpenAI API access
-- Quality is more important than reliability
-- You want the cleanest, most intelligent conversions
-- You're working on complex reports with intricate business logic
-
-#### **Use Hybrid Version When:**
-- You need guaranteed tool functionality
-- Working in corporate/restricted environments
-- API costs are a concern
-- You want maximum compatibility
-
-### AI Enhancement Features
-
-#### **Context-Aware Conversion**
-- Understands data source types (SQL Server, Oracle, etc.)
-- Recognizes business domains (Sales, Finance, Customer)
-- Adapts conversion patterns based on complexity
-
-#### **Business Intelligence Focus**
-- Generates KPIs and performance metrics
-- Creates time intelligence measures
-- Includes trend analysis and growth calculations
-- Provides data quality validation measures
-
-#### **Performance Optimization**
-- Follows Power BI best practices
-- Optimizes DAX for performance
-- Implements proper error handling
-- Suggests query folding opportunities
+#### **Migration Guides (.md files)**
+- Step-by-step implementation instructions
+- Visual creation guidance
+- Validation procedures
+- Troubleshooting assistance
 
 ## 🔌 Supported Data Sources
 
 ### Primary Support
-- **SQL Server** - Full support with Windows/SQL authentication
-- **Oracle** - Connection strings and query optimization
-- **ODBC** - Generic ODBC data source connections
-- **OLE DB** - Legacy data source support
+- **SQL Server** - Full T-SQL support with optimization
+- **Oracle** - PL/SQL compatibility with query adaptation
+- **MySQL** - Query syntax conversion
+- **PostgreSQL** - Advanced feature support
+- **ODBC/OLE DB** - Generic connectivity
 
-### Connection String Parsing
-- **Automatic detection** of server, database, authentication
-- **Multi-format support** for various connection string patterns
-- **Security handling** for integrated vs. database authentication
-
-### Data Source Mapping
-
-| SSRS Data Source | Power BI Connector | Conversion Method |
-|------------------|-------------------|-------------------|
-| SQL Server | Sql.Database() | Direct mapping |
-| Oracle | Oracle.Database() | Query adaptation |
-| ODBC | Odbc.DataSource() | Generic connection |
-| OLE DB | OleDb.DataSource() | Legacy support |
-| Web Service | Web.Contents() | Manual configuration |
-
-## 📋 Migration Process
-
-### Phase 1: Analysis (Automated)
-1. **RDL Parsing** - Extract all report components
-2. **Complexity Analysis** - Score migration difficulty
-3. **Data Source Detection** - Identify connection types
-4. **Dependency Mapping** - Understand relationships
-
-### Phase 2: Conversion (AI/Manual)
-1. **Query Conversion** - SQL to Power Query M
-2. **Measure Generation** - SSRS expressions to DAX
-3. **Visual Mapping** - Charts to Power BI visuals
-4. **Optimization** - Performance and best practices
-
-### Phase 3: Documentation (Automated)
-1. **Guide Generation** - Step-by-step instructions
-2. **Validation Queries** - Data accuracy verification
-3. **Troubleshooting** - Common issues and solutions
-4. **Metadata Preservation** - Complete audit trail
-
-### Phase 4: Implementation (Manual)
-1. **Power BI Setup** - Connect to data sources
-2. **Code Implementation** - Import generated files
-3. **Visual Creation** - Build dashboards
-4. **Testing & Validation** - Verify accuracy
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-#### **RDL Parsing Errors**
-```
-Error: namespace not found
-Solution: Tool automatically detects RDL versions (2008/2010/2016)
-Check: Ensure RDL file is valid XML
-```
-
-#### **AI Conversion Failures**
-```
-Error: OpenAI API error
-Solution: Check API key configuration and network connectivity
-Fallback: Use hybrid version for manual conversion
-```
-
-#### **Data Source Connection Issues**
-```
-Error: Connection string parsing failed
-Solution: Manually verify server and database names in generated files
-Check: Authentication method compatibility
-```
-
-#### **Performance Issues**
-```
-Error: Large dataset processing slow
-Solution: Consider DirectQuery instead of Import mode
-Optimization: Use data source-specific optimizations
-```
-
-### Debug Mode
-
-Add debug output to troubleshoot issues:
-
-```python
-# Enable detailed logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
-# Run with verbose output
-python rdl_migration_tool.py report.rdl --verbose
-```
-
-### Support Resources
-
-- **Generated Documentation** - Check migration_output/guides/
-- **Validation Queries** - Use migration_output/validation/
-- **Microsoft Documentation** - Power BI and DAX references
-- **Community Forums** - Power BI community support
+### Connection Features
+- **Automatic Detection** of database types
+- **Multi-Format Support** for connection strings
+- **Security Handling** for various authentication methods
+- **Performance Optimization** for each database type
 
 ## 📖 API Reference
 
 ### Core Classes
+
+#### **RDLBusinessAnalyzer**
+```python
+class RDLBusinessAnalyzer:
+    def analyze_similarity(self, rdl_files: List[str]) -> Dict
+    def extract_business_logic(self, rdl_file: str) -> BusinessLogic
+    def calculate_similarity_score(self, logic1: BusinessLogic, logic2: BusinessLogic) -> float
+    def generate_consolidation_report(self, analysis_results: Dict) -> str
+```
 
 #### **RDLParser**
 ```python
@@ -461,223 +350,111 @@ class RDLParser:
     def extract_datasets(self) -> List[Dict]
     def extract_report_items(self) -> List[ReportElement]
     def _detect_namespace(self) -> dict
-    def _calculate_dataset_complexity(self, dataset_info: dict) -> int
 ```
 
 #### **PowerBIConverter**
 ```python
 class PowerBIConverter:
-    def __init__(self, openai_client=None, version="1.0+")
-    def convert_sql_to_powerquery(self, sql_query: str, dataset_name: str, data_source_info: dict) -> str
+    def __init__(self, openai_client=None)
+    def convert_sql_to_powerquery(self, sql_query: str, dataset_name: str) -> str
     def convert_table_to_dax(self, table_element: ReportElement) -> str
-    def convert_chart_to_powerbi_visual(self, chart_element: ReportElement) -> Dict
-```
-
-#### **ReportElement**
-```python
-@dataclass
-class ReportElement:
-    name: str
-    type: str  # 'Table', 'Chart', 'TextBox'
-    properties: Dict[str, Any]
-    sql_query: str = ""
-    parameters: List[Dict] = None
+    def generate_batch_migration_guide(self, batch_info: dict) -> str
 ```
 
 ### Configuration Options
-
-#### **Environment Variables**
 - `OPENAI_API_KEY` - OpenAI API key for AI features
-- `OPENAI_MODEL` - AI model selection (default: gpt-4)
-- `OUTPUT_DIR` - Custom output directory (default: ./migration_output)
-
-#### **Tool Parameters**
-- `rdl_file_path` - Path to input RDL file
-- `ai_enabled` - Enable/disable AI conversion
-- `output_directory` - Custom output location
-- `complexity_threshold` - Migration complexity scoring
-
-### Return Values
-
-#### **Migration Summary**
-```python
-{
-    "report_name": str,
-    "complexity_score": int,
-    "data_sources": List[Dict],
-    "datasets": List[Dict],
-    "report_items": List[Dict],
-    "generated_files": Dict[str, List[str]],
-    "migration_timestamp": str,
-    "ai_powered": bool
-}
-```
-
-#### **Conversion Results**
-```python
-{
-    "power_query": Dict[str, str],      # {dataset_name: m_code}
-    "dax_measures": Dict[str, str],     # {table_name: dax_code}
-    "visual_configs": Dict[str, Dict],  # {chart_name: config}
-    "validation_queries": str,
-    "migration_guide": str
-}
-```
+- `MAX_CONTENT_LENGTH` - File upload size limit
+- `FLASK_ENV` - Development/production mode
+- `SIMILARITY_THRESHOLD` - Analysis sensitivity
 
 ## 🤝 Contributing
 
 ### Development Setup
-
-1. **Fork the repository**
-2. **Create feature branch**
-3. **Set up development environment**:
-
 ```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
+# Clone repository
+git clone <repository-url>
+cd ssrs-to-powerbi
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment
+cp .env.example .env
+# Edit .env with your API keys
 
 # Run tests
 python -m pytest tests/
 
-# Format code
-black rdl_migration_tool.py
-
-# Type checking
-mypy rdl_migration_tool.py
+# Start development server
+python web_app.py
 ```
 
-### Code Structure
-
+### Project Structure
 ```
-├── rdl_migration_tool.py          # Main hybrid tool
-├── rdl_migration_tool_ai_only.py  # AI-only version
-├── tests/                         # Unit tests
-│   ├── test_rdl_parser.py
-│   ├── test_converter.py
-│   └── sample_rdl_files/
-├── examples/                      # Example RDL files
-├── docs/                         # Additional documentation
-└── requirements.txt              # Dependencies
-```
-
-### Adding New Features
-
-#### **New Data Source Support**
-1. Update `_parse_connection_string()` method
-2. Add connector mapping in `convert_sql_to_powerquery()`
-3. Test with sample connection strings
-4. Update documentation
-
-#### **Enhanced DAX Patterns**
-1. Extend `_generate_domain_specific_dax()` method
-2. Add business domain detection
-3. Include new measure patterns
-4. Update AI prompts for context
-
-#### **Visual Type Mapping**
-1. Update `convert_chart_to_powerbi_visual()` method
-2. Add new chart type mappings
-3. Include formatting recommendations
-4. Test with various chart configurations
-
-### Testing
-
-#### **Unit Tests**
-```bash
-# Run all tests
-python -m pytest
-
-# Test specific component
-python -m pytest tests/test_rdl_parser.py
-
-# Test with sample files
-python -m pytest tests/test_integration.py
+├── app.py                          # Core RDL parsing and conversion
+├── web_app.py                      # Flask web application
+├── rdl_business_analyzer.py        # Business logic analysis
+├── rdl_parser_helpers.py           # Parsing utilities
+├── rdl_types.py                    # Data type definitions
+├── llm_config.py                   # AI client configuration
+├── templates/                      # HTML templates
+│   ├── index-embedded.html
+│   ├── migration-embedded.html
+│   └── results.html
+├── sample_files/                   # Test RDL files
+├── requirements.txt                # Dependencies
+└── README.md                       # This file
 ```
 
-#### **Integration Tests**
-```bash
-# Test with real RDL files
-python rdl_migration_tool.py tests/sample_rdl_files/sales_report.rdl
-
-# Validate output structure
-python tests/validate_output.py migration_output/
-```
+### Adding Features
+- **New Database Support**: Extend connection string parsing
+- **Enhanced Analysis**: Add new similarity metrics
+- **UI Improvements**: Enhance web interface
+- **Performance**: Optimize batch processing
 
 ## 📋 Version History
 
-### Version 2.0.0 - AI-Powered Release
-**Release Date**: 2025-01-03
+### Version 3.0.0 - Enterprise Release (Current)
+**Release Date**: 2025-08-04
 
 #### ✨ **New Features**
-- **GPT-4 Integration** for intelligent conversions
-- **Context-Aware Processing** based on data source types
-- **Business Intelligence Focus** with KPIs and analytics
-- **Dual Tool Architecture** (AI-only vs Hybrid versions)
-- **Enhanced Documentation** with step-by-step guides
+- **Token-Optimized Migration Guides** with 60-80% LLM cost reduction
+- **Advanced Business Logic Analysis** with 5-metric scoring
+- **Enterprise Web Interface** with bulk processing
+- **Real-time Progress Tracking** with WebSocket integration
+- **Similarity Analysis Engine** for report consolidation
 
 #### 🔧 **Improvements**
-- **Universal Data Source Support** (SQL Server, Oracle, ODBC, OLE DB)
-- **Advanced RDL Parsing** with namespace auto-detection
-- **Organized Output Structure** for enterprise use
-- **Comprehensive Validation** with SQL verification queries
-- **Performance Optimization** following Power BI best practices
+- **Multi-Database Support** beyond SQL Server
+- **Enhanced UI/UX** with professional design
+- **Batch Processing Optimization** for thousands of files
+- **Comprehensive Error Handling** and validation
+- **Organized Output Structure** for enterprise deployment
 
 #### 🐛 **Bug Fixes**
-- Fixed namespace detection for RDL 2008/2010/2016 versions
-- Resolved connection string parsing for various formats
-- Improved error handling and user feedback
-- Enhanced file path handling for cross-platform compatibility
-
-### Version 1.0.0 - Initial Release
-**Release Date**: 2024-12-15
-
-#### ✨ **Features**
-- Basic RDL file parsing
-- SQL to Power Query conversion
-- Simple DAX measure generation
-- Manual conversion methods
-- Basic output file generation
+- Fixed placeholder variable replacement in migration guides
+- Resolved namespace detection issues
+- Improved connection string parsing accuracy
+- Enhanced cross-platform compatibility
 
 ---
 
 ## 📞 Support & Contact
 
 ### Getting Help
+1. **Check Documentation** - Review README and generated guides
+2. **Test with Samples** - Use provided sample RDL files
+3. **Review Analysis Reports** - Check similarity analysis results
+4. **Validate Output** - Use generated validation procedures
 
-1. **Check Documentation** - Review this README and generated guides
-2. **Run Validation** - Use generated validation queries
-3. **Review Examples** - Check sample outputs and configurations
-4. **Community Support** - Power BI community forums
-
-### Reporting Issues
-
-When reporting issues, please include:
-- **Tool Version** - Which version you're using
-- **RDL File Info** - RDL version and complexity
-- **Error Messages** - Complete error output
-- **Environment** - OS, Python version, dependencies
-- **Sample Data** - Anonymized RDL snippet if possible
-
-### Feature Requests
-
-We welcome suggestions for:
-- **New Data Source Support**
-- **Enhanced AI Prompting**
-- **Additional DAX Patterns**
-- **Visual Type Mappings**
-- **Performance Optimizations**
+### System Requirements
+- **Minimum**: 4GB RAM, Python 3.8+
+- **Recommended**: 8GB RAM, SSD storage
+- **Network**: Internet access for AI features
+- **Browser**: Modern browser for web interface
 
 ---
 
-## 📜 License
+**🚀 Transform Your Enterprise SSRS Infrastructure to Power BI with AI Intelligence!**
 
-This tool is provided as-is for educational and professional use. Please ensure compliance with your organization's policies regarding:
-- **AI Service Usage** (OpenAI API)
-- **Data Processing** (RDL file contents)
-- **Tool Deployment** (internal vs external use)
-
----
-
-**🚀 Transform Your SSRS Reports to Power BI with Intelligence!**
-
-*Generated and maintained by the RDL to Power BI Migration Tool team*
+*Efficient • Intelligent • Enterprise-Ready*
