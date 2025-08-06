@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition">
+  <DataSources>
+    <DataSource Name="TestDS">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=test;Initial Catalog=test</ConnectString>
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="TestData">
+      <Query>
+        <DataSourceName>TestDS</DataSourceName>
+        <CommandText>SELECT * FROM Test1 WHERE Date >= @StartDate</CommandText>
+      </Query>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="StartDate">
+      <DataType>DateTime</DataType>
+    </ReportParameter>
+  </ReportParameters>
+</Report>

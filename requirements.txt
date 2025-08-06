@@ -1,0 +1,52 @@
+# RDL to Power BI Migration Tool - Requirements
+# Flask Web Application Requirements
+
+# Core Flask components (compatible versions)
+Flask>=2.3.0
+Flask-SocketIO>=5.3.0
+
+# HTTP and WebSocket support
+python-socketio>=5.8.0
+eventlet>=0.33.0
+
+# File handling and utilities
+Werkzeug>=2.3.0
+
+# Environment and configuration
+python-dotenv>=1.0.0
+
+# AI and API integration
+openai>=1.0.0
+langchain-openai>=0.1.0
+requests>=2.31.0
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Background task processing (optional)
+celery>=5.3.0
+redis>=4.5.0
+
+# Database (optional for job persistence)
+SQLAlchemy>=2.0.0
+Flask-SQLAlchemy>=3.0.0
+
+# Security and validation
+marshmallow>=3.19.0
+email-validator>=2.0.0
+
+# Development tools (optional)
+black>=23.0.0
+flake8>=6.1.0
+
+# System utilities
+psutil>=5.9.0
+click>=8.1.0
+
+# Windows-specific dependencies (only needed for Windows Service integration)
+# pywin32>=306; sys_platform == "win32"
+# wfastcgi>=3.0.0; sys_platform == "win32"
+
+# Note: Built-in Python modules (no installation needed)
+# xml.etree.ElementTree, json, uuid, threading, datetime, dataclasses, typing
