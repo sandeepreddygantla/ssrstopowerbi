@@ -14,12 +14,15 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+<<<<<<< HEAD
     <!-- Configuration Script -->
     <script>
         // Global configuration injected from Flask
         window.APP_CONFIG = {{ config | tojson }};
     </script>
     
+=======
+>>>>>>> origin/machine1-history
     <!-- Embedded CSS for external access compatibility -->
     <style>
     :root {
@@ -319,6 +322,7 @@
         color: var(--light-blue);
         margin-bottom: 1rem;
     }
+<<<<<<< HEAD
 
     /* Custom Alert System Styles */
     .custom-alert-overlay {
@@ -483,6 +487,8 @@
         border-color: var(--primary-orange);
         box-shadow: 0 0 0 3px rgba(255, 97, 43, 0.1);
     }
+=======
+>>>>>>> origin/machine1-history
     </style>
 </head>
 <body>
@@ -490,11 +496,16 @@
     <nav class="modern-nav">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center justify-between">
+<<<<<<< HEAD
                 <a href="#" onclick="navigateTo('')" class="nav-brand">
+=======
+                <a href="/" class="nav-brand">
+>>>>>>> origin/machine1-history
                     <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
                     RDL Migration Tool
                 </a>
                 <div class="nav-links">
+<<<<<<< HEAD
                     <a href="#" onclick="navigateTo('')" class="active">
                         <i class="fas fa-home"></i>
                         Dashboard
@@ -504,6 +515,17 @@
                         Migration
                     </a>
                     <a href="#" onclick="navigateTo('results')">
+=======
+                    <a href="/" class="active">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                    <a href="/migration">
+                        <i class="fas fa-upload"></i>
+                        Migration
+                    </a>
+                    <a href="/results">
+>>>>>>> origin/machine1-history
                         <i class="fas fa-chart-line"></i>
                         Results
                     </a>
@@ -525,7 +547,11 @@
             </p>
             
             <div class="flex items-center justify-center gap-6 flex-wrap">
+<<<<<<< HEAD
                 <a href="#" onclick="navigateTo('migration')" class="btn btn-primary">
+=======
+                <a href="/migration" class="btn btn-primary">
+>>>>>>> origin/machine1-history
                     <i class="fas fa-rocket"></i>
                     Start Migration
                 </a>
@@ -653,7 +679,11 @@
                 <i class="fas fa-inbox"></i>
                 <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">No Recent Activity</h3>
                 <p style="color: var(--dark-gray);">Start your first migration to see activity here</p>
+<<<<<<< HEAD
                 <a href="#" onclick="navigateTo('migration')" class="btn btn-primary mt-4">
+=======
+                <a href="/migration" class="btn btn-primary mt-4">
+>>>>>>> origin/machine1-history
                     <i class="fas fa-upload mr-2"></i>
                     Upload Files
                 </a>
@@ -676,7 +706,11 @@
         async loadStatistics() {
             try {
                 // Load statistics from API
+<<<<<<< HEAD
                 const response = await fetch(APP_CONFIG.apiUrls.results + '/history');
+=======
+                const response = await fetch('/api/results/history');
+>>>>>>> origin/machine1-history
                 const data = await response.json();
                 
                 if (response.ok && data.results) {
@@ -709,7 +743,11 @@
         
         async loadRecentActivity() {
             try {
+<<<<<<< HEAD
                 const response = await fetch(APP_CONFIG.apiUrls.recentActivity);
+=======
+                const response = await fetch('/api/recent-activity');
+>>>>>>> origin/machine1-history
                 const data = await response.json();
                 
                 const loadingEl = document.getElementById('activity-loading');
@@ -769,6 +807,7 @@
         }
     }
     
+<<<<<<< HEAD
     async function showQuickDemo() {
         await alertSystem.info(
             'This feature will provide a guided tour of the migration process, including file upload, similarity analysis, and Power BI conversion. Stay tuned for the interactive demo!',
@@ -783,6 +822,10 @@
         } else {
             window.location.href = APP_CONFIG.pageUrls[endpoint] || (APP_CONFIG.baseUrl + '/' + endpoint);
         }
+=======
+    function showQuickDemo() {
+        alert('Quick Demo: This would show a guided tour of the migration process. Feature coming soon!');
+>>>>>>> origin/machine1-history
     }
     
     // Initialize dashboard when page loads
@@ -790,6 +833,7 @@
         console.log('🎯 Initializing Dashboard Manager (External Access Compatible)');
         new DashboardManager();
     });
+<<<<<<< HEAD
 
     // Custom Alert System Class
     class CustomAlertSystem {
@@ -967,5 +1011,8 @@
         </div>
     </div>
 
+=======
+    </script>
+>>>>>>> origin/machine1-history
 </body>
 </html>

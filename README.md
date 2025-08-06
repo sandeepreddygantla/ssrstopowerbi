@@ -124,7 +124,11 @@ python web_app.py
 #### **1. Web Application (web_app.py)**
 - Flask application with SocketIO for real-time updates
 - Background job processing with threading
+<<<<<<< HEAD
 - Secure file upload handling (500MB max)
+=======
+- Secure file upload handling (16GB max)
+>>>>>>> origin/machine1-history
 - REST API endpoints for analysis and migration
 
 #### **2. RDL Business Analyzer (rdl_business_analyzer.py)**
@@ -170,7 +174,11 @@ export OPENAI_API_KEY="your-api-key-here"
 
 # Optional configurations
 export FLASK_ENV=development
+<<<<<<< HEAD
 export MAX_CONTENT_LENGTH=500MB
+=======
+export MAX_CONTENT_LENGTH=16GB
+>>>>>>> origin/machine1-history
 ```
 
 ## 🚀 Usage

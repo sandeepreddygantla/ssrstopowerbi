@@ -67,7 +67,10 @@ results/
 *.temp
 .cache/
 CLAUDE.md
+<<<<<<< HEAD
 claude-code-sub-agents/
 PROJECT_STRUCTURE.md
 README_SETUP.md
 run.sh
+=======
+>>>>>>> origin/machine1-history

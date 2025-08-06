@@ -14,12 +14,15 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+<<<<<<< HEAD
     <!-- Configuration Script -->
     <script>
         // Global configuration injected from Flask
         window.APP_CONFIG = {{ config | tojson }};
     </script>
     
+=======
+>>>>>>> origin/machine1-history
     <!-- Embedded CSS for external access compatibility -->
     <style>
     :root {
@@ -86,6 +89,7 @@
         color: var(--white);
     }
 
+<<<<<<< HEAD
     /* Custom Alert System Styles */
     .custom-alert-overlay {
         position: fixed;
@@ -390,6 +394,8 @@
         to { transform: scaleX(0); }
     }
 
+=======
+>>>>>>> origin/machine1-history
     /* Global Responsive Layout */
     .container {
         width: 100%;
@@ -1173,11 +1179,16 @@
     <nav class="modern-nav">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center justify-between">
+<<<<<<< HEAD
                 <a href="#" onclick="navigateTo('')" class="nav-brand">
+=======
+                <a href="/" class="nav-brand">
+>>>>>>> origin/machine1-history
                     <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
                     RDL Migration Tool
                 </a>
                 <div class="nav-links">
+<<<<<<< HEAD
                     <a href="#" onclick="navigateTo('')">
                         <i class="fas fa-home"></i>
                         Dashboard
@@ -1187,6 +1198,17 @@
                         Migration
                     </a>
                     <a href="#" onclick="navigateTo('results')">
+=======
+                    <a href="/">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                    <a href="/migration" class="active">
+                        <i class="fas fa-upload"></i>
+                        Migration
+                    </a>
+                    <a href="/results">
+>>>>>>> origin/machine1-history
                         <i class="fas fa-chart-line"></i>
                         Results
                     </a>
@@ -1196,6 +1218,35 @@
     </nav>
 
     <div class="container mx-auto px-6">
+<<<<<<< HEAD
+=======
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">
+                <i class="fas fa-rocket" style="color: var(--primary-orange); margin-right: 1rem;"></i>
+                Enterprise RDL Migration
+            </h1>
+            <p class="hero-subtitle">
+                Transform thousands of SSRS reports to Power BI with AI-powered business logic analysis
+            </p>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-3" style="max-width: 600px; margin: 0 auto;">
+                <div class="stat-card text-center">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-orange); margin-bottom: 0.5rem;">10k+</div>
+                    <div style="font-size: 0.875rem; color: var(--dark-gray); text-transform: uppercase; letter-spacing: 0.5px;">Files Supported</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-orange); margin-bottom: 0.5rem;">95%</div>
+                    <div style="font-size: 0.875rem; color: var(--dark-gray); text-transform: uppercase; letter-spacing: 0.5px;">Accuracy Rate</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--primary-orange); margin-bottom: 0.5rem;">16GB</div>
+                    <div style="font-size: 0.875rem; color: var(--dark-gray); text-transform: uppercase; letter-spacing: 0.5px;">Max Upload</div>
+                </div>
+            </div>
+        </section>
+>>>>>>> origin/machine1-history
 
         <!-- Upload Section -->
         <section class="upload-section">
@@ -1230,7 +1281,11 @@
                         </div>
                         <div class="upload-spec">
                             <i class="fas fa-database" style="color: var(--primary-orange);"></i>
+<<<<<<< HEAD
                             <span>Max 500MB total</span>
+=======
+                            <span>Max 16GB total</span>
+>>>>>>> origin/machine1-history
                         </div>
                         <div class="upload-spec">
                             <i class="fas fa-lock" style="color: var(--primary-orange);"></i>
@@ -1589,6 +1644,7 @@
 
     <!-- Embedded JavaScript -->
     <script>
+<<<<<<< HEAD
     // Custom Alert System Class
     class CustomAlertSystem {
         constructor() {
@@ -1809,19 +1865,27 @@
         return alertSystem;
     }
 
+=======
+>>>>>>> origin/machine1-history
     class MigrationManager {
         constructor() {
             this.uploadedFiles = [];
             this.selectedFiles = [];
             this.analysisResults = null;
             this.currentJobId = null;
+<<<<<<< HEAD
             this.uploadJobId = null;
+=======
+>>>>>>> origin/machine1-history
             this.init();
         }
         
         init() {
+<<<<<<< HEAD
             // Initialize alert system first
             initializeAlertSystem();
+=======
+>>>>>>> origin/machine1-history
             this.setupFileUpload();
             this.setupEventListeners();
         }
@@ -1910,7 +1974,11 @@
                 console.log(`[DEBUG] Uploading ${files.length} files to server...`);
                 
                 // Upload to server
+<<<<<<< HEAD
                 const response = await fetch(APP_CONFIG.apiUrls.upload, {
+=======
+                const response = await fetch('/api/upload', {
+>>>>>>> origin/machine1-history
                     method: 'POST',
                     body: formData
                 });
@@ -1922,12 +1990,15 @@
                 const result = await response.json();
                 console.log('[DEBUG] Upload response:', result);
                 
+<<<<<<< HEAD
                 // Store the upload job ID for preview functionality
                 if (result.job_id) {
                     this.uploadJobId = result.job_id;
                     console.log('[DEBUG] Stored upload job ID:', this.uploadJobId);
                 }
                 
+=======
+>>>>>>> origin/machine1-history
                 // Update progress to 100%
                 progressBar.style.width = '100%';
                 progressText.textContent = '100%';
@@ -2022,6 +2093,7 @@
                                 </span>
                             </td>
                             <td>
+<<<<<<< HEAD
                                 <div style="display: flex; gap: 0.5rem;">
                                     <button onclick="migrationManager.previewUploadedFile('${file.path}', '${file.name}')" 
                                             class="btn btn-primary btn-sm" title="Preview RDL file">
@@ -2032,6 +2104,12 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
+=======
+                                <button onclick="migrationManager.removeFile(${file.id})" 
+                                        class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+>>>>>>> origin/machine1-history
                             </td>
                         </tr>
                     `).join('')}
@@ -2100,6 +2178,7 @@
             return Array.from(checkboxes).every(cb => cb.checked);
         }
         
+<<<<<<< HEAD
         async clearAllFiles() {
             const confirmed = await initializeAlertSystem().confirm(
                 'Are you sure you want to clear all uploaded files? This action cannot be undone.',
@@ -2108,14 +2187,21 @@
             );
             
             if (confirmed) {
+=======
+        clearAllFiles() {
+            if (confirm('Are you sure you want to clear all uploaded files?')) {
+>>>>>>> origin/machine1-history
                 this.uploadedFiles = [];
                 this.updateFileList();
                 document.getElementById('file-list-section').classList.add('hidden');
                 document.getElementById('analysis-section').classList.add('hidden');
                 document.getElementById('results-section').classList.add('hidden');
                 document.getElementById('migration-section').classList.add('hidden');
+<<<<<<< HEAD
                 
                 initializeAlertSystem().showToast('success', 'Files Cleared', 'All uploaded files have been removed successfully');
+=======
+>>>>>>> origin/machine1-history
             }
         }
         
@@ -2167,7 +2253,11 @@
                 progressBar.style.width = '20%';
                 progressText.textContent = '20%';
                 
+<<<<<<< HEAD
                 const uploadResponse = await fetch(APP_CONFIG.apiUrls.upload, {
+=======
+                const uploadResponse = await fetch('/api/upload', {
+>>>>>>> origin/machine1-history
                     method: 'POST',
                     body: formData
                 });
@@ -2194,7 +2284,11 @@
                 progressBar.style.width = '40%';
                 progressText.textContent = '40%';
                 
+<<<<<<< HEAD
                 const response = await fetch(APP_CONFIG.apiUrls.analyze, {
+=======
+                const response = await fetch('/api/analyze', {
+>>>>>>> origin/machine1-history
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -2927,7 +3021,11 @@
             // Start polling every 2 seconds
             this.progressInterval = setInterval(async () => {
                 try {
+<<<<<<< HEAD
                     const response = await fetch(`${APP_CONFIG.apiUrls.progress}/${this.currentJobId}`);
+=======
+                    const response = await fetch(`/api/progress/${this.currentJobId}`);
+>>>>>>> origin/machine1-history
                     const progressData = await response.json();
                     
                     console.log('[DEBUG] Progress update:', progressData);
@@ -3014,9 +3112,13 @@
                     </div>
                 </div>
                 
+<<<<<<< HEAD
                 <div id="error-summary-card" style="background: #FAF8F2; padding: 1rem; border-radius: 8px; text-align: center; border: 2px solid #D9F6FA; cursor: ${(progressData.errors || 0) > 0 ? 'pointer' : 'default'};" 
                      onclick="${(progressData.errors || 0) > 0 ? 'migrationApp.showErrorDetails()' : ''}" 
                      title="${(progressData.errors || 0) > 0 ? 'Click to view error details' : ''}">
+=======
+                <div style="background: #FAF8F2; padding: 1rem; border-radius: 8px; text-align: center; border: 2px solid #D9F6FA;">
+>>>>>>> origin/machine1-history
                     <div style="color: #FF612B; font-size: 1.2rem; margin-bottom: 0.5rem;">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
@@ -3024,7 +3126,10 @@
                     <div style="font-size: 1.5rem; font-weight: 700; color: ${(progressData.errors || 0) > 0 ? '#FF612B' : '#002677'};">
                         ${progressData.errors || 0}
                     </div>
+<<<<<<< HEAD
                     ${(progressData.errors || 0) > 0 ? '<div style="font-size: 0.75rem; color: #6B7280; margin-top: 0.5rem;">Click for details</div>' : ''}
+=======
+>>>>>>> origin/machine1-history
                 </div>
             `;
             
@@ -3074,7 +3179,11 @@
             try {
                 console.log('[DEBUG] Fetching migration results for job:', this.currentJobId);
                 
+<<<<<<< HEAD
                 const response = await fetch(`${APP_CONFIG.apiUrls.results}/${this.currentJobId}`);
+=======
+                const response = await fetch(`/api/results/${this.currentJobId}`);
+>>>>>>> origin/machine1-history
                 const resultsData = await response.json();
                 
                 console.log('[DEBUG] Migration results:', resultsData);
@@ -3103,7 +3212,11 @@
             try {
                 // Remove _migration suffix for results directory lookup
                 const resultJobId = this.currentJobId.replace('_migration', '');
+<<<<<<< HEAD
                 const filesResponse = await fetch(`${APP_CONFIG.apiUrls.results}/${resultJobId}/files`);
+=======
+                const filesResponse = await fetch(`/api/results/${resultJobId}/files`);
+>>>>>>> origin/machine1-history
                 const filesData = await filesResponse.json();
                 
                 console.log('[DEBUG] Generated files:', filesData);
@@ -3262,7 +3375,11 @@
             try {
                 const resultJobId = this.currentJobId.replace('_migration', '');
                 const link = document.createElement('a');
+<<<<<<< HEAD
                 link.href = `${APP_CONFIG.apiUrls.download}/${resultJobId}`;
+=======
+                link.href = `/api/download/${resultJobId}`;
+>>>>>>> origin/machine1-history
                 link.download = `migration_results_${resultJobId}.zip`;
                 document.body.appendChild(link);
                 link.click();
@@ -3279,7 +3396,11 @@
             try {
                 const resultJobId = this.currentJobId.replace('_migration', '');
                 const link = document.createElement('a');
+<<<<<<< HEAD
                 link.href = `${APP_CONFIG.apiUrls.results}/${resultJobId}/download/${filePath}`;
+=======
+                link.href = `/api/results/${resultJobId}/download/${filePath}`;
+>>>>>>> origin/machine1-history
                 link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
@@ -3294,6 +3415,7 @@
         
         async previewFile(filePath, contextFile = null) {
             try {
+<<<<<<< HEAD
                 if (!this.currentJobId) {
                     this.showToast('error', 'Preview Error', 'No migration job selected for preview');
                     return;
@@ -3303,10 +3425,17 @@
                 
                 // Build URL with context parameter for dynamic content injection
                 let previewUrl = `${APP_CONFIG.apiUrls.results}/${resultJobId}/preview/${encodeURIComponent(filePath)}`;
+=======
+                const resultJobId = this.currentJobId.replace('_migration', '');
+                
+                // Build URL with context parameter for dynamic content injection
+                let previewUrl = `/api/results/${resultJobId}/preview/${filePath}`;
+>>>>>>> origin/machine1-history
                 if (contextFile) {
                     previewUrl += `?context_file=${encodeURIComponent(contextFile)}`;
                 }
                 
+<<<<<<< HEAD
                 console.log('Preview URL:', previewUrl);
                 
                 const response = await fetch(previewUrl);
@@ -3326,6 +3455,9 @@
                     return;
                 }
                 
+=======
+                const response = await fetch(previewUrl);
+>>>>>>> origin/machine1-history
                 const previewData = await response.json();
                 
                 if (previewData.error) {
@@ -3337,6 +3469,7 @@
                 const isBatchGuide = filePath.includes('batch_migration_guide.md');
                 
                 this.showFilePreviewModal(previewData, filePath, isBatchGuide);
+<<<<<<< HEAD
                 this.showToast('success', 'Preview Loaded', `Successfully loaded preview for ${filePath.split('/').pop()}`);
                 
             } catch (error) {
@@ -3387,6 +3520,12 @@
             } catch (error) {
                 console.error('Upload preview error:', error);
                 this.showToast('error', 'Preview Error', `Failed to load preview: ${error.message}`);
+=======
+                
+            } catch (error) {
+                console.error('Preview error:', error);
+                this.showToast('error', 'Preview Failed', 'Unable to preview file');
+>>>>>>> origin/machine1-history
             }
         }
         
@@ -3416,6 +3555,7 @@
                 `;
             }
             
+<<<<<<< HEAD
             // Context switcher (only for batch guides)
             let contextSwitcher = '';
             if (isBatchGuide) {
@@ -3426,6 +3566,8 @@
                 `;
             }
             
+=======
+>>>>>>> origin/machine1-history
             modal.innerHTML = `
                 <div style="background: #FFFFFF; width: 90%; max-width: 900px; height: 85%; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
                     <div style="background: #002677; color: #FFFFFF; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
@@ -3433,7 +3575,11 @@
                             <i class="fas fa-file-alt" style="margin-right: 0.5rem;"></i>
                             ${isBatchGuide ? '🚀 Smart Migration Guide' : `File Preview: ${filePath}`}
                         </h3>
+<<<<<<< HEAD
                         <button id="preview-modal-close" style="background: none; border: none; color: #FFFFFF; font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 4px; transition: background-color 0.2s;">×</button>
+=======
+                        <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; color: #FFFFFF; font-size: 1.5rem; cursor: pointer;">×</button>
+>>>>>>> origin/machine1-history
                     </div>
                     ${contextSwitcher}
                     <div id="previewContent" style="flex: 1; overflow: auto; padding: 1.5rem;">
@@ -3444,6 +3590,7 @@
             
             document.body.appendChild(modal);
             
+<<<<<<< HEAD
             // Enhanced modal close functionality
             const closeModal = () => {
                 modal.remove();
@@ -3482,6 +3629,14 @@
                 }
             };
             document.addEventListener('keydown', handleKeydown);
+=======
+            // Close on click outside
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            };
+>>>>>>> origin/machine1-history
         }
         
         async switchGuideContext(contextFile, filePath) {
@@ -3521,7 +3676,11 @@
         
         async getContextualPreview(filePath, contextFile) {
             const resultJobId = this.currentJobId.replace('_migration', '');
+<<<<<<< HEAD
             let previewUrl = `${APP_CONFIG.apiUrls.results}/${resultJobId}/preview/${filePath}`;
+=======
+            let previewUrl = `/api/results/${resultJobId}/preview/${filePath}`;
+>>>>>>> origin/machine1-history
             if (contextFile) {
                 previewUrl += `?context_file=${encodeURIComponent(contextFile)}`;
             }
@@ -3599,12 +3758,18 @@ ORDER BY o.OrderDate DESC`
         
         // OLD toggleSQLComparison method REMOVED to prevent conflicts
         
+<<<<<<< HEAD
         async exportPairAnalysis(pairIndex) {
             // Placeholder for export functionality
             await initializeAlertSystem().warning(
                 `Export functionality for pair analysis ${pairIndex + 1} is currently under development. This feature will allow you to export detailed similarity analysis reports in multiple formats including PDF, Excel, and JSON.`,
                 'Feature Coming Soon'
             );
+=======
+        exportPairAnalysis(pairIndex) {
+            // Placeholder for export functionality
+            alert(`Export analysis for pair ${pairIndex + 1} - Feature coming soon!`);
+>>>>>>> origin/machine1-history
         }
         
         getSelectedFiles() {
@@ -3692,7 +3857,11 @@ ORDER BY o.OrderDate DESC`
                 
                 console.log('[DEBUG] Starting migration with data:', migrationData);
                 
+<<<<<<< HEAD
                 const response = await fetch(APP_CONFIG.apiUrls.migrate, {
+=======
+                const response = await fetch('/api/migrate', {
+>>>>>>> origin/machine1-history
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -3730,6 +3899,7 @@ ORDER BY o.OrderDate DESC`
             });
         }
         
+<<<<<<< HEAD
         async showErrorDetails() {
             if (!this.currentJobId) {
                 this.showToast('error', 'No Job Selected', 'No active migration job to show errors for');
@@ -3914,6 +4084,11 @@ ${'='.repeat(60)}
         showToast(type, title, message) {
             // Use the custom alert system's toast functionality
             initializeAlertSystem().showToast(type, title, message);
+=======
+        showToast(type, title, message) {
+            // Simple alert for now - in a real implementation, this would show a proper toast
+            alert(`${title}: ${message}`);
+>>>>>>> origin/machine1-history
         }
         
         showSuccessNotification(message) {
@@ -3973,6 +4148,7 @@ ${'='.repeat(60)}
         }
     }
     
+<<<<<<< HEAD
     // Navigation function using dynamic URLs
     function navigateTo(endpoint) {
         if (endpoint === '') {
@@ -3982,6 +4158,8 @@ ${'='.repeat(60)}
         }
     }
     
+=======
+>>>>>>> origin/machine1-history
     // Initialize migration manager when page loads
     document.addEventListener('DOMContentLoaded', () => {
         console.log('🚀 Initializing Migration Manager (External Access Compatible)');
@@ -4007,6 +4185,7 @@ ${'='.repeat(60)}
         </div>
     </div>
 
+<<<<<<< HEAD
     <!-- Error Details Modal -->
     <div id="error-details-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
@@ -4060,5 +4239,7 @@ ${'='.repeat(60)}
         </div>
     </div>
 
+=======
+>>>>>>> origin/machine1-history
 </body>
 </html>
