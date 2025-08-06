@@ -16,7 +16,7 @@ class Config:
         
         # Flask configuration
         self.SECRET_KEY = os.getenv('SECRET_KEY', 'rdl-migration-secret-key-2025')
-        self.MAX_CONTENT_LENGTH = 500 * 1024 * 1024  # 500MB max upload
+        self.MAX_CONTENT_LENGTH = 16 * 1024 * 1024 * 1024  # 16GB max upload
         
         # Directory configuration
         self.BASE_DIR = Path(__file__).parent
