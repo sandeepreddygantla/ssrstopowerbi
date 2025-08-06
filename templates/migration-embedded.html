@@ -14,15 +14,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-<<<<<<< HEAD
-    <!-- Configuration Script -->
-    <script>
-        // Global configuration injected from Flask
-        window.APP_CONFIG = {{ config | tojson }};
-    </script>
-    
-=======
->>>>>>> origin/machine1-history
     <!-- Embedded CSS for external access compatibility -->
     <style>
     :root {
@@ -89,313 +80,6 @@
         color: var(--white);
     }
 
-<<<<<<< HEAD
-    /* Custom Alert System Styles */
-    .custom-alert-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .custom-alert-overlay.show {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .custom-alert {
-        background: var(--white);
-        border-radius: 20px;
-        padding: 2rem;
-        min-width: 400px;
-        max-width: 500px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        transform: scale(0.8) translateY(20px);
-        transition: all 0.3s ease;
-        position: relative;
-        border: 1px solid rgba(0, 38, 119, 0.1);
-    }
-
-    .custom-alert-overlay.show .custom-alert {
-        transform: scale(1) translateY(0);
-    }
-
-    .custom-alert.success {
-        border-left: 6px solid #10b981;
-    }
-
-    .custom-alert.error {
-        border-left: 6px solid #ef4444;
-    }
-
-    .custom-alert.warning {
-        border-left: 6px solid var(--primary-orange);
-    }
-
-    .custom-alert.info {
-        border-left: 6px solid var(--navy-blue);
-    }
-
-    .custom-alert-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .custom-alert-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 1rem;
-        font-size: 1.5rem;
-    }
-
-    .custom-alert.success .custom-alert-icon {
-        background: rgba(16, 185, 129, 0.1);
-        color: #10b981;
-    }
-
-    .custom-alert.error .custom-alert-icon {
-        background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
-    }
-
-    .custom-alert.warning .custom-alert-icon {
-        background: rgba(255, 97, 43, 0.1);
-        color: var(--primary-orange);
-    }
-
-    .custom-alert.info .custom-alert-icon {
-        background: rgba(0, 38, 119, 0.1);
-        color: var(--navy-blue);
-    }
-
-    .custom-alert-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--navy-blue);
-        margin: 0;
-    }
-
-    .custom-alert-message {
-        color: var(--dark-gray);
-        line-height: 1.6;
-        margin: 1rem 0 1.5rem 0;
-        font-size: 1rem;
-    }
-
-    .custom-alert-actions {
-        display: flex;
-        gap: 0.75rem;
-        justify-content: flex-end;
-    }
-
-    .custom-alert-btn {
-        padding: 0.75rem 1.5rem;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: none;
-        min-width: 80px;
-    }
-
-    .custom-alert-btn.primary {
-        background: var(--primary-orange);
-        color: var(--white);
-        box-shadow: 0 4px 12px rgba(255, 97, 43, 0.3);
-    }
-
-    .custom-alert-btn.primary:hover {
-        background: #e55527;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(255, 97, 43, 0.4);
-    }
-
-    .custom-alert-btn.secondary {
-        background: transparent;
-        color: var(--dark-gray);
-        border: 2px solid var(--light-cream);
-    }
-
-    .custom-alert-btn.secondary:hover {
-        background: var(--light-cream);
-        border-color: var(--primary-orange);
-        color: var(--navy-blue);
-    }
-
-    .custom-alert-input {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border: 2px solid var(--light-blue);
-        border-radius: 8px;
-        font-size: 1rem;
-        margin: 1rem 0;
-        transition: all 0.3s ease;
-    }
-
-    .custom-alert-input:focus {
-        outline: none;
-        border-color: var(--primary-orange);
-        box-shadow: 0 0 0 3px rgba(255, 97, 43, 0.1);
-    }
-
-    /* Enhanced Toast notification styles for migration interface */
-    .migration-toast-container {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10001;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        max-width: 400px;
-    }
-
-    .migration-toast {
-        background: var(--white);
-        border-radius: 12px;
-        padding: 1rem 1.25rem;
-        min-width: 300px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        transform: translateX(400px);
-        transition: all 0.3s ease;
-        border-left: 4px solid;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .migration-toast.show {
-        transform: translateX(0);
-    }
-
-    .migration-toast.success {
-        border-left-color: #10b981;
-    }
-
-    .migration-toast.error {
-        border-left-color: #ef4444;
-    }
-
-    .migration-toast.warning {
-        border-left-color: var(--primary-orange);
-    }
-
-    .migration-toast.info {
-        border-left-color: var(--navy-blue);
-    }
-
-    .migration-toast-content {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .migration-toast-icon {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-
-    .migration-toast.success .migration-toast-icon {
-        background: rgba(16, 185, 129, 0.1);
-        color: #10b981;
-    }
-
-    .migration-toast.error .migration-toast-icon {
-        background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
-    }
-
-    .migration-toast.warning .migration-toast-icon {
-        background: rgba(255, 97, 43, 0.1);
-        color: var(--primary-orange);
-    }
-
-    .migration-toast.info .migration-toast-icon {
-        background: rgba(0, 38, 119, 0.1);
-        color: var(--navy-blue);
-    }
-
-    .migration-toast-text {
-        flex: 1;
-    }
-
-    .migration-toast-title {
-        font-weight: 600;
-        color: var(--navy-blue);
-        margin-bottom: 0.25rem;
-        font-size: 0.875rem;
-    }
-
-    .migration-toast-message {
-        color: var(--dark-gray);
-        font-size: 0.8rem;
-        line-height: 1.4;
-    }
-
-    .migration-toast-close {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: none;
-        border: none;
-        color: var(--dark-gray);
-        cursor: pointer;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 0.875rem;
-        opacity: 0.6;
-        transition: all 0.2s ease;
-    }
-
-    .migration-toast-close:hover {
-        opacity: 1;
-        background: rgba(0, 0, 0, 0.05);
-    }
-
-    .migration-toast-progress {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 3px;
-        background: var(--primary-orange);
-        width: 100%;
-        transform-origin: left;
-        animation: toast-progress 5s linear forwards;
-    }
-
-    @keyframes toast-progress {
-        from { transform: scaleX(1); }
-        to { transform: scaleX(0); }
-    }
-
-=======
->>>>>>> origin/machine1-history
     /* Global Responsive Layout */
     .container {
         width: 100%;
@@ -1179,26 +863,11 @@
     <nav class="modern-nav">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center justify-between">
-<<<<<<< HEAD
-                <a href="#" onclick="navigateTo('')" class="nav-brand">
-=======
                 <a href="/" class="nav-brand">
->>>>>>> origin/machine1-history
                     <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
                     RDL Migration Tool
                 </a>
                 <div class="nav-links">
-<<<<<<< HEAD
-                    <a href="#" onclick="navigateTo('')">
-                        <i class="fas fa-home"></i>
-                        Dashboard
-                    </a>
-                    <a href="#" onclick="navigateTo('migration')" class="active">
-                        <i class="fas fa-upload"></i>
-                        Migration
-                    </a>
-                    <a href="#" onclick="navigateTo('results')">
-=======
                     <a href="/">
                         <i class="fas fa-home"></i>
                         Dashboard
@@ -1208,7 +877,6 @@
                         Migration
                     </a>
                     <a href="/results">
->>>>>>> origin/machine1-history
                         <i class="fas fa-chart-line"></i>
                         Results
                     </a>
@@ -1218,8 +886,6 @@
     </nav>
 
     <div class="container mx-auto px-6">
-<<<<<<< HEAD
-=======
         <!-- Hero Section -->
         <section class="hero-section">
             <h1 class="hero-title">
@@ -1246,7 +912,6 @@
                 </div>
             </div>
         </section>
->>>>>>> origin/machine1-history
 
         <!-- Upload Section -->
         <section class="upload-section">
@@ -1281,11 +946,7 @@
                         </div>
                         <div class="upload-spec">
                             <i class="fas fa-database" style="color: var(--primary-orange);"></i>
-<<<<<<< HEAD
-                            <span>Max 500MB total</span>
-=======
                             <span>Max 16GB total</span>
->>>>>>> origin/machine1-history
                         </div>
                         <div class="upload-spec">
                             <i class="fas fa-lock" style="color: var(--primary-orange);"></i>
@@ -1644,248 +1305,16 @@
 
     <!-- Embedded JavaScript -->
     <script>
-<<<<<<< HEAD
-    // Custom Alert System Class
-    class CustomAlertSystem {
-        constructor() {
-            this.overlay = document.getElementById('custom-alert-overlay');
-            this.alert = document.getElementById('custom-alert');
-            this.icon = document.getElementById('custom-alert-icon-symbol');
-            this.title = document.getElementById('custom-alert-title');
-            this.message = document.getElementById('custom-alert-message');
-            this.inputContainer = document.getElementById('custom-alert-input-container');
-            this.input = document.getElementById('custom-alert-input');
-            this.actions = document.getElementById('custom-alert-actions');
-            this.cancelBtn = document.getElementById('custom-alert-cancel');
-            this.confirmBtn = document.getElementById('custom-alert-confirm');
-            this.toastContainer = document.getElementById('migration-toast-container');
-            
-            // Only bind events if elements exist
-            if (this.overlay) {
-                this.bindEvents();
-            }
-        }
-        
-        bindEvents() {
-            // Close on overlay click
-            if (this.overlay) {
-                this.overlay.addEventListener('click', (e) => {
-                    if (e.target === this.overlay) {
-                        this.close(false);
-                    }
-                });
-            }
-            
-            // Close on escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && this.overlay && this.overlay.classList.contains('show')) {
-                    this.close(false);
-                }
-            });
-            
-            // Handle input enter key
-            if (this.input) {
-                this.input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        this.close(this.input.value);
-                    }
-                });
-            }
-        }
-        
-        show(type, title, message, options = {}) {
-            return new Promise((resolve) => {
-                this.currentResolve = resolve;
-                
-                // Set alert type
-                this.alert.className = `custom-alert ${type}`;
-                
-                // Set icon based on type
-                const icons = {
-                    success: 'fas fa-check-circle',
-                    error: 'fas fa-exclamation-triangle',
-                    warning: 'fas fa-exclamation-circle',
-                    info: 'fas fa-info-circle'
-                };
-                this.icon.className = icons[type] || icons.info;
-                
-                // Set content
-                this.title.textContent = title;
-                this.message.textContent = message;
-                
-                // Handle different alert types
-                if (options.type === 'confirm') {
-                    this.cancelBtn.style.display = 'block';
-                    this.confirmBtn.textContent = options.confirmText || 'Confirm';
-                    this.cancelBtn.textContent = options.cancelText || 'Cancel';
-                    this.inputContainer.style.display = 'none';
-                } else if (options.type === 'prompt') {
-                    this.cancelBtn.style.display = 'block';
-                    this.confirmBtn.textContent = options.confirmText || 'OK';
-                    this.cancelBtn.textContent = options.cancelText || 'Cancel';
-                    this.inputContainer.style.display = 'block';
-                    this.input.value = options.defaultValue || '';
-                    this.input.placeholder = options.placeholder || 'Enter value...';
-                } else {
-                    this.cancelBtn.style.display = 'none';
-                    this.confirmBtn.textContent = 'OK';
-                    this.inputContainer.style.display = 'none';
-                }
-                
-                // Bind button events
-                this.cancelBtn.onclick = () => this.close(false);
-                this.confirmBtn.onclick = () => {
-                    if (options.type === 'prompt') {
-                        this.close(this.input.value);
-                    } else {
-                        this.close(true);
-                    }
-                };
-                
-                // Show alert
-                this.overlay.classList.add('show');
-                
-                // Focus input if prompt
-                if (options.type === 'prompt') {
-                    setTimeout(() => this.input.focus(), 300);
-                }
-            });
-        }
-        
-        close(result) {
-            this.overlay.classList.remove('show');
-            if (this.currentResolve) {
-                this.currentResolve(result);
-                this.currentResolve = null;
-            }
-        }
-        
-        // Public API methods
-        async alert(message, title = 'Alert') {
-            return await this.show('info', title, message, { type: 'alert' });
-        }
-        
-        async success(message, title = 'Success') {
-            return await this.show('success', title, message, { type: 'alert' });
-        }
-        
-        async error(message, title = 'Error') {
-            return await this.show('error', title, message, { type: 'alert' });
-        }
-        
-        async warning(message, title = 'Warning') {
-            return await this.show('warning', title, message, { type: 'alert' });
-        }
-        
-        async confirm(message, title = 'Confirm', options = {}) {
-            return await this.show('warning', title, message, {
-                type: 'confirm',
-                confirmText: options.confirmText,
-                cancelText: options.cancelText
-            });
-        }
-        
-        async prompt(message, title = 'Input Required', defaultValue = '', placeholder = '') {
-            return await this.show('info', title, message, {
-                type: 'prompt',
-                defaultValue,
-                placeholder
-            });
-        }
-        
-        // Enhanced Toast notifications for migration interface
-        showToast(type, title, message, duration = 5000) {
-            const toast = document.createElement('div');
-            toast.className = `migration-toast ${type}`;
-            
-            const icons = {
-                success: 'fas fa-check',
-                error: 'fas fa-times',
-                warning: 'fas fa-exclamation',
-                info: 'fas fa-info'
-            };
-            
-            toast.innerHTML = `
-                <div class="migration-toast-content">
-                    <div class="migration-toast-icon">
-                        <i class="${icons[type] || icons.info}"></i>
-                    </div>
-                    <div class="migration-toast-text">
-                        <div class="migration-toast-title">${title}</div>
-                        <div class="migration-toast-message">${message}</div>
-                    </div>
-                </div>
-                <button class="migration-toast-close">×</button>
-                <div class="migration-toast-progress"></div>
-            `;
-            
-            // Add close functionality
-            const closeBtn = toast.querySelector('.migration-toast-close');
-            closeBtn.addEventListener('click', () => {
-                this.removeToast(toast);
-            });
-            
-            // Add to container
-            this.toastContainer.appendChild(toast);
-            
-            // Show toast
-            setTimeout(() => toast.classList.add('show'), 100);
-            
-            // Auto remove after duration
-            setTimeout(() => {
-                this.removeToast(toast);
-            }, duration);
-        }
-        
-        removeToast(toast) {
-            toast.classList.remove('show');
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            }, 300);
-        }
-    }
-
-    // Global alert system instance - initialize after DOM is ready
-    let alertSystem = null;
-
-    // Initialize alert system when DOM is ready
-    function initializeAlertSystem() {
-        if (!alertSystem) {
-            alertSystem = new CustomAlertSystem();
-            
-            // Override native alert functions only if alert system is properly initialized
-            if (alertSystem.overlay) {
-                window.alert = (message) => alertSystem.alert(message);
-                window.confirm = (message) => alertSystem.confirm(message);
-                window.prompt = (message, defaultValue) => alertSystem.prompt(message, 'Input Required', defaultValue);
-            }
-        }
-        return alertSystem;
-    }
-
-=======
->>>>>>> origin/machine1-history
     class MigrationManager {
         constructor() {
             this.uploadedFiles = [];
             this.selectedFiles = [];
             this.analysisResults = null;
             this.currentJobId = null;
-<<<<<<< HEAD
-            this.uploadJobId = null;
-=======
->>>>>>> origin/machine1-history
             this.init();
         }
         
         init() {
-<<<<<<< HEAD
-            // Initialize alert system first
-            initializeAlertSystem();
-=======
->>>>>>> origin/machine1-history
             this.setupFileUpload();
             this.setupEventListeners();
         }
@@ -1974,11 +1403,7 @@
                 console.log(`[DEBUG] Uploading ${files.length} files to server...`);
                 
                 // Upload to server
-<<<<<<< HEAD
-                const response = await fetch(APP_CONFIG.apiUrls.upload, {
-=======
                 const response = await fetch('/api/upload', {
->>>>>>> origin/machine1-history
                     method: 'POST',
                     body: formData
                 });
@@ -1990,15 +1415,6 @@
                 const result = await response.json();
                 console.log('[DEBUG] Upload response:', result);
                 
-<<<<<<< HEAD
-                // Store the upload job ID for preview functionality
-                if (result.job_id) {
-                    this.uploadJobId = result.job_id;
-                    console.log('[DEBUG] Stored upload job ID:', this.uploadJobId);
-                }
-                
-=======
->>>>>>> origin/machine1-history
                 // Update progress to 100%
                 progressBar.style.width = '100%';
                 progressText.textContent = '100%';
@@ -2093,23 +1509,10 @@
                                 </span>
                             </td>
                             <td>
-<<<<<<< HEAD
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <button onclick="migrationManager.previewUploadedFile('${file.path}', '${file.name}')" 
-                                            class="btn btn-primary btn-sm" title="Preview RDL file">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="migrationManager.removeFile(${file.id})" 
-                                            class="btn btn-secondary btn-sm" title="Remove file">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-=======
                                 <button onclick="migrationManager.removeFile(${file.id})" 
                                         class="btn btn-secondary btn-sm">
                                     <i class="fas fa-trash"></i>
                                 </button>
->>>>>>> origin/machine1-history
                             </td>
                         </tr>
                     `).join('')}
@@ -2178,30 +1581,14 @@
             return Array.from(checkboxes).every(cb => cb.checked);
         }
         
-<<<<<<< HEAD
-        async clearAllFiles() {
-            const confirmed = await initializeAlertSystem().confirm(
-                'Are you sure you want to clear all uploaded files? This action cannot be undone.',
-                'Clear All Files',
-                { confirmText: 'Clear All', cancelText: 'Cancel' }
-            );
-            
-            if (confirmed) {
-=======
         clearAllFiles() {
             if (confirm('Are you sure you want to clear all uploaded files?')) {
->>>>>>> origin/machine1-history
                 this.uploadedFiles = [];
                 this.updateFileList();
                 document.getElementById('file-list-section').classList.add('hidden');
                 document.getElementById('analysis-section').classList.add('hidden');
                 document.getElementById('results-section').classList.add('hidden');
                 document.getElementById('migration-section').classList.add('hidden');
-<<<<<<< HEAD
-                
-                initializeAlertSystem().showToast('success', 'Files Cleared', 'All uploaded files have been removed successfully');
-=======
->>>>>>> origin/machine1-history
             }
         }
         
@@ -2253,11 +1640,7 @@
                 progressBar.style.width = '20%';
                 progressText.textContent = '20%';
                 
-<<<<<<< HEAD
-                const uploadResponse = await fetch(APP_CONFIG.apiUrls.upload, {
-=======
                 const uploadResponse = await fetch('/api/upload', {
->>>>>>> origin/machine1-history
                     method: 'POST',
                     body: formData
                 });
@@ -2284,11 +1667,7 @@
                 progressBar.style.width = '40%';
                 progressText.textContent = '40%';
                 
-<<<<<<< HEAD
-                const response = await fetch(APP_CONFIG.apiUrls.analyze, {
-=======
                 const response = await fetch('/api/analyze', {
->>>>>>> origin/machine1-history
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -3021,11 +2400,7 @@
             // Start polling every 2 seconds
             this.progressInterval = setInterval(async () => {
                 try {
-<<<<<<< HEAD
-                    const response = await fetch(`${APP_CONFIG.apiUrls.progress}/${this.currentJobId}`);
-=======
                     const response = await fetch(`/api/progress/${this.currentJobId}`);
->>>>>>> origin/machine1-history
                     const progressData = await response.json();
                     
                     console.log('[DEBUG] Progress update:', progressData);
@@ -3112,13 +2487,7 @@
                     </div>
                 </div>
                 
-<<<<<<< HEAD
-                <div id="error-summary-card" style="background: #FAF8F2; padding: 1rem; border-radius: 8px; text-align: center; border: 2px solid #D9F6FA; cursor: ${(progressData.errors || 0) > 0 ? 'pointer' : 'default'};" 
-                     onclick="${(progressData.errors || 0) > 0 ? 'migrationApp.showErrorDetails()' : ''}" 
-                     title="${(progressData.errors || 0) > 0 ? 'Click to view error details' : ''}">
-=======
                 <div style="background: #FAF8F2; padding: 1rem; border-radius: 8px; text-align: center; border: 2px solid #D9F6FA;">
->>>>>>> origin/machine1-history
                     <div style="color: #FF612B; font-size: 1.2rem; margin-bottom: 0.5rem;">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
@@ -3126,10 +2495,6 @@
                     <div style="font-size: 1.5rem; font-weight: 700; color: ${(progressData.errors || 0) > 0 ? '#FF612B' : '#002677'};">
                         ${progressData.errors || 0}
                     </div>
-<<<<<<< HEAD
-                    ${(progressData.errors || 0) > 0 ? '<div style="font-size: 0.75rem; color: #6B7280; margin-top: 0.5rem;">Click for details</div>' : ''}
-=======
->>>>>>> origin/machine1-history
                 </div>
             `;
             
@@ -3179,11 +2544,7 @@
             try {
                 console.log('[DEBUG] Fetching migration results for job:', this.currentJobId);
                 
-<<<<<<< HEAD
-                const response = await fetch(`${APP_CONFIG.apiUrls.results}/${this.currentJobId}`);
-=======
                 const response = await fetch(`/api/results/${this.currentJobId}`);
->>>>>>> origin/machine1-history
                 const resultsData = await response.json();
                 
                 console.log('[DEBUG] Migration results:', resultsData);
@@ -3212,11 +2573,7 @@
             try {
                 // Remove _migration suffix for results directory lookup
                 const resultJobId = this.currentJobId.replace('_migration', '');
-<<<<<<< HEAD
-                const filesResponse = await fetch(`${APP_CONFIG.apiUrls.results}/${resultJobId}/files`);
-=======
                 const filesResponse = await fetch(`/api/results/${resultJobId}/files`);
->>>>>>> origin/machine1-history
                 const filesData = await filesResponse.json();
                 
                 console.log('[DEBUG] Generated files:', filesData);
@@ -3375,11 +2732,7 @@
             try {
                 const resultJobId = this.currentJobId.replace('_migration', '');
                 const link = document.createElement('a');
-<<<<<<< HEAD
-                link.href = `${APP_CONFIG.apiUrls.download}/${resultJobId}`;
-=======
                 link.href = `/api/download/${resultJobId}`;
->>>>>>> origin/machine1-history
                 link.download = `migration_results_${resultJobId}.zip`;
                 document.body.appendChild(link);
                 link.click();
@@ -3396,11 +2749,7 @@
             try {
                 const resultJobId = this.currentJobId.replace('_migration', '');
                 const link = document.createElement('a');
-<<<<<<< HEAD
-                link.href = `${APP_CONFIG.apiUrls.results}/${resultJobId}/download/${filePath}`;
-=======
                 link.href = `/api/results/${resultJobId}/download/${filePath}`;
->>>>>>> origin/machine1-history
                 link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
@@ -3415,49 +2764,15 @@
         
         async previewFile(filePath, contextFile = null) {
             try {
-<<<<<<< HEAD
-                if (!this.currentJobId) {
-                    this.showToast('error', 'Preview Error', 'No migration job selected for preview');
-                    return;
-                }
-                
-                const resultJobId = this.currentJobId.replace('_migration', '');
-                
-                // Build URL with context parameter for dynamic content injection
-                let previewUrl = `${APP_CONFIG.apiUrls.results}/${resultJobId}/preview/${encodeURIComponent(filePath)}`;
-=======
                 const resultJobId = this.currentJobId.replace('_migration', '');
                 
                 // Build URL with context parameter for dynamic content injection
                 let previewUrl = `/api/results/${resultJobId}/preview/${filePath}`;
->>>>>>> origin/machine1-history
                 if (contextFile) {
                     previewUrl += `?context_file=${encodeURIComponent(contextFile)}`;
                 }
                 
-<<<<<<< HEAD
-                console.log('Preview URL:', previewUrl);
-                
                 const response = await fetch(previewUrl);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    let errorMessage = 'Unknown error occurred';
-                    
-                    try {
-                        const errorData = JSON.parse(errorText);
-                        errorMessage = errorData.error || errorMessage;
-                    } catch (e) {
-                        errorMessage = response.statusText || `HTTP ${response.status}`;
-                    }
-                    
-                    this.showToast('error', 'Preview Failed', `Unable to preview file: ${errorMessage}`);
-                    return;
-                }
-                
-=======
-                const response = await fetch(previewUrl);
->>>>>>> origin/machine1-history
                 const previewData = await response.json();
                 
                 if (previewData.error) {
@@ -3469,63 +2784,10 @@
                 const isBatchGuide = filePath.includes('batch_migration_guide.md');
                 
                 this.showFilePreviewModal(previewData, filePath, isBatchGuide);
-<<<<<<< HEAD
-                this.showToast('success', 'Preview Loaded', `Successfully loaded preview for ${filePath.split('/').pop()}`);
-                
-            } catch (error) {
-                console.error('Preview error:', error);
-                this.showToast('error', 'Preview Error', `Failed to load preview: ${error.message}`);
-            }
-        }
-        
-        async previewUploadedFile(filePath, fileName) {
-            try {
-                console.log('Previewing uploaded file:', filePath, fileName);
-                
-                // Use upload job ID for previewing uploaded files
-                const jobId = this.uploadJobId || 'unknown';
-                
-                // Build URL for uploaded file preview using the new API endpoint
-                let previewUrl = `/rdlmigration/api/upload/${jobId}/preview/${encodeURIComponent(fileName)}`;
-                
-                console.log('Upload preview URL:', previewUrl);
-                
-                const response = await fetch(previewUrl);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    let errorMessage = 'Unknown error occurred';
-                    
-                    try {
-                        const errorData = JSON.parse(errorText);
-                        errorMessage = errorData.error || errorMessage;
-                    } catch (e) {
-                        errorMessage = response.statusText || `HTTP ${response.status}`;
-                    }
-                    
-                    this.showToast('error', 'Preview Failed', `Unable to preview uploaded file: ${errorMessage}`);
-                    return;
-                }
-                
-                const previewData = await response.json();
-                
-                if (previewData.error) {
-                    this.showToast('error', 'Preview Failed', previewData.error);
-                    return;
-                }
-                
-                this.showFilePreviewModal(previewData, fileName, false);
-                this.showToast('success', 'Preview Loaded', `Successfully loaded preview for ${fileName}`);
-                
-            } catch (error) {
-                console.error('Upload preview error:', error);
-                this.showToast('error', 'Preview Error', `Failed to load preview: ${error.message}`);
-=======
                 
             } catch (error) {
                 console.error('Preview error:', error);
                 this.showToast('error', 'Preview Failed', 'Unable to preview file');
->>>>>>> origin/machine1-history
             }
         }
         
@@ -3555,19 +2817,6 @@
                 `;
             }
             
-<<<<<<< HEAD
-            // Context switcher (only for batch guides)
-            let contextSwitcher = '';
-            if (isBatchGuide) {
-                contextSwitcher = `
-                    <div style="background: #F8FAFC; padding: 1rem; border-bottom: 1px solid #E2E8F0;">
-                        <div style="color: #64748B; font-size: 0.875rem;">Context switching available for batch guides</div>
-                    </div>
-                `;
-            }
-            
-=======
->>>>>>> origin/machine1-history
             modal.innerHTML = `
                 <div style="background: #FFFFFF; width: 90%; max-width: 900px; height: 85%; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
                     <div style="background: #002677; color: #FFFFFF; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
@@ -3575,11 +2824,7 @@
                             <i class="fas fa-file-alt" style="margin-right: 0.5rem;"></i>
                             ${isBatchGuide ? '🚀 Smart Migration Guide' : `File Preview: ${filePath}`}
                         </h3>
-<<<<<<< HEAD
-                        <button id="preview-modal-close" style="background: none; border: none; color: #FFFFFF; font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 4px; transition: background-color 0.2s;">×</button>
-=======
                         <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; color: #FFFFFF; font-size: 1.5rem; cursor: pointer;">×</button>
->>>>>>> origin/machine1-history
                     </div>
                     ${contextSwitcher}
                     <div id="previewContent" style="flex: 1; overflow: auto; padding: 1.5rem;">
@@ -3590,53 +2835,12 @@
             
             document.body.appendChild(modal);
             
-<<<<<<< HEAD
-            // Enhanced modal close functionality
-            const closeModal = () => {
-                modal.remove();
-                document.removeEventListener('keydown', handleKeydown);
-            };
-            
-            // Close button handler
-            const closeBtn = document.getElementById('preview-modal-close');
-            if (closeBtn) {
-                closeBtn.onclick = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeModal();
-                };
-                
-                // Add hover effect
-                closeBtn.onmouseenter = () => {
-                    closeBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                };
-                closeBtn.onmouseleave = () => {
-                    closeBtn.style.backgroundColor = 'transparent';
-                };
-            }
-            
-            // Close on click outside
-            modal.onclick = (e) => {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            };
-            
-            // Close on Escape key
-            const handleKeydown = (e) => {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
-            };
-            document.addEventListener('keydown', handleKeydown);
-=======
             // Close on click outside
             modal.onclick = (e) => {
                 if (e.target === modal) {
                     modal.remove();
                 }
             };
->>>>>>> origin/machine1-history
         }
         
         async switchGuideContext(contextFile, filePath) {
@@ -3676,11 +2880,7 @@
         
         async getContextualPreview(filePath, contextFile) {
             const resultJobId = this.currentJobId.replace('_migration', '');
-<<<<<<< HEAD
-            let previewUrl = `${APP_CONFIG.apiUrls.results}/${resultJobId}/preview/${filePath}`;
-=======
             let previewUrl = `/api/results/${resultJobId}/preview/${filePath}`;
->>>>>>> origin/machine1-history
             if (contextFile) {
                 previewUrl += `?context_file=${encodeURIComponent(contextFile)}`;
             }
@@ -3758,18 +2958,9 @@ ORDER BY o.OrderDate DESC`
         
         // OLD toggleSQLComparison method REMOVED to prevent conflicts
         
-<<<<<<< HEAD
-        async exportPairAnalysis(pairIndex) {
-            // Placeholder for export functionality
-            await initializeAlertSystem().warning(
-                `Export functionality for pair analysis ${pairIndex + 1} is currently under development. This feature will allow you to export detailed similarity analysis reports in multiple formats including PDF, Excel, and JSON.`,
-                'Feature Coming Soon'
-            );
-=======
         exportPairAnalysis(pairIndex) {
             // Placeholder for export functionality
             alert(`Export analysis for pair ${pairIndex + 1} - Feature coming soon!`);
->>>>>>> origin/machine1-history
         }
         
         getSelectedFiles() {
@@ -3857,11 +3048,7 @@ ORDER BY o.OrderDate DESC`
                 
                 console.log('[DEBUG] Starting migration with data:', migrationData);
                 
-<<<<<<< HEAD
-                const response = await fetch(APP_CONFIG.apiUrls.migrate, {
-=======
                 const response = await fetch('/api/migrate', {
->>>>>>> origin/machine1-history
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -3899,196 +3086,9 @@ ORDER BY o.OrderDate DESC`
             });
         }
         
-<<<<<<< HEAD
-        async showErrorDetails() {
-            if (!this.currentJobId) {
-                this.showToast('error', 'No Job Selected', 'No active migration job to show errors for');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${window.config.baseUrl}/api/errors/${this.currentJobId}`);
-                const errorData = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(errorData.error || 'Failed to fetch error details');
-                }
-                
-                this.displayErrorDetails(errorData);
-                document.getElementById('error-details-modal').classList.remove('hidden');
-                
-            } catch (error) {
-                console.error('Error fetching error details:', error);
-                this.showToast('error', 'Error Loading Details', 'Failed to load error details: ' + error.message);
-            }
-        }
-        
-        displayErrorDetails(errorData) {
-            const contentDiv = document.getElementById('error-details-content');
-            
-            if (!errorData.errors || errorData.errors.length === 0) {
-                contentDiv.innerHTML = `
-                    <div class="text-center py-8">
-                        <i class="fas fa-check-circle text-green-500 text-4xl mb-4"></i>
-                        <h3 class="text-lg font-semibold text-gray-700">No Errors Found</h3>
-                        <p class="text-gray-500">This migration completed without any errors.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            const errorHtml = `
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <h3 class="text-lg font-semibold text-red-800 mb-2">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        Migration Summary
-                    </h3>
-                    <div class="grid grid-cols-3 gap-4 text-sm">
-                        <div>
-                            <span class="font-medium text-gray-600">Job ID:</span>
-                            <span class="text-gray-800">${errorData.job_id}</span>
-                        </div>
-                        <div>
-                            <span class="font-medium text-gray-600">Status:</span>
-                            <span class="text-red-600 font-medium">${errorData.status}</span>
-                        </div>
-                        <div>
-                            <span class="font-medium text-gray-600">Total Errors:</span>
-                            <span class="text-red-600 font-bold">${errorData.error_count}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="space-y-3">
-                    <h4 class="text-md font-semibold text-gray-800 mb-3">
-                        <i class="fas fa-list mr-2"></i>
-                        Error Details
-                    </h4>
-                    ${errorData.errors.map((error, index) => `
-                        <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3">
-                                    <span class="text-red-600 font-bold text-sm">${index + 1}</span>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900 mb-2">
-                                        ${this.categorizeError(error)}
-                                    </div>
-                                    <div class="text-sm text-gray-700 bg-white p-3 rounded border font-mono">
-                                        ${this.escapeHtml(error)}
-                                    </div>
-                                    <div class="mt-2 text-xs text-gray-500">
-                                        ${this.getErrorSolution(error)}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            
-            contentDiv.innerHTML = errorHtml;
-        }
-        
-        categorizeError(errorMessage) {
-            if (errorMessage.includes('RDL parsing failed')) return '🔍 RDL File Parsing Error';
-            if (errorMessage.includes('Power Query conversion failed')) return '⚡ Power Query Conversion Error';
-            if (errorMessage.includes('DAX conversion failed')) return '📊 DAX Measures Generation Error';
-            if (errorMessage.includes('Critical error processing')) return '💥 File Processing Error';
-            if (errorMessage.includes('LLM API error') || errorMessage.includes('AI conversion failed')) return '🤖 AI Service Error';
-            return '⚠️ General Migration Error';
-        }
-        
-        getErrorSolution(errorMessage) {
-            if (errorMessage.includes('RDL parsing failed')) {
-                return '💡 Solution: Check if the RDL file is valid and not corrupted. Ensure it follows Microsoft RDL schema.';
-            }
-            if (errorMessage.includes('Power Query conversion failed')) {
-                return '💡 Solution: Review the SQL query syntax. Complex queries may need manual adjustment.';
-            }
-            if (errorMessage.includes('DAX conversion failed')) {
-                return '💡 Solution: Check table structure and field mappings. Some SSRS expressions may need manual conversion.';
-            }
-            if (errorMessage.includes('LLM API error') || errorMessage.includes('AI conversion failed')) {
-                return '💡 Solution: Check your AI service configuration and API limits. Try again in a few minutes.';
-            }
-            return '💡 Solution: Review the error message above and check the migration logs for more details.';
-        }
-        
-        escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        hideErrorDetails() {
-            document.getElementById('error-details-modal').classList.add('hidden');
-        }
-        
-        async downloadErrorLog() {
-            if (!this.currentJobId) {
-                this.showToast('error', 'No Job Selected', 'No active migration job to download errors for');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${window.config.baseUrl}/api/errors/${this.currentJobId}`);
-                const errorData = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(errorData.error || 'Failed to fetch error details');
-                }
-                
-                // Create error log content
-                const logContent = `Migration Error Log
-Job ID: ${errorData.job_id}
-Status: ${errorData.status}
-Generated: ${new Date().toISOString()}
-Total Errors: ${errorData.error_count}
-
-${'='.repeat(60)}
-ERROR DETAILS
-${'='.repeat(60)}
-
-${errorData.errors.map((error, index) => `
-Error #${index + 1}:
-${'-'.repeat(40)}
-${error}
-
-`).join('')}
-
-${'='.repeat(60)}
-END OF LOG
-${'='.repeat(60)}
-`;
-                
-                // Create and download the file
-                const blob = new Blob([logContent], { type: 'text/plain' });
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `migration_errors_${this.currentJobId}_${new Date().toISOString().split('T')[0]}.log`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
-                
-                this.showToast('success', 'Download Complete', 'Error log has been downloaded successfully');
-                
-            } catch (error) {
-                console.error('Error downloading error log:', error);
-                this.showToast('error', 'Download Failed', 'Failed to download error log: ' + error.message);
-            }
-        }
-        
-        showToast(type, title, message) {
-            // Use the custom alert system's toast functionality
-            initializeAlertSystem().showToast(type, title, message);
-=======
         showToast(type, title, message) {
             // Simple alert for now - in a real implementation, this would show a proper toast
             alert(`${title}: ${message}`);
->>>>>>> origin/machine1-history
         }
         
         showSuccessNotification(message) {
@@ -4148,18 +3148,6 @@ ${'='.repeat(60)}
         }
     }
     
-<<<<<<< HEAD
-    // Navigation function using dynamic URLs
-    function navigateTo(endpoint) {
-        if (endpoint === '') {
-            window.location.href = APP_CONFIG.pageUrls.dashboard;
-        } else {
-            window.location.href = APP_CONFIG.pageUrls[endpoint] || (APP_CONFIG.baseUrl + '/' + endpoint);
-        }
-    }
-    
-=======
->>>>>>> origin/machine1-history
     // Initialize migration manager when page loads
     document.addEventListener('DOMContentLoaded', () => {
         console.log('🚀 Initializing Migration Manager (External Access Compatible)');
@@ -4185,61 +3173,5 @@ ${'='.repeat(60)}
         </div>
     </div>
 
-<<<<<<< HEAD
-    <!-- Error Details Modal -->
-    <div id="error-details-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
-            <div class="flex items-center justify-between p-6 border-b">
-                <h2 class="text-xl font-semibold" style="color: var(--navy-blue);">
-                    <i class="fas fa-exclamation-triangle text-orange-500 mr-2"></i>
-                    Migration Error Details
-                </h2>
-                <button onclick="migrationApp.hideErrorDetails()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <div class="p-6 overflow-y-auto max-h-96">
-                <div id="error-details-content" class="space-y-4">
-                    <!-- Error details will be populated here -->
-                </div>
-            </div>
-            <div class="p-4 border-t bg-gray-50 flex justify-end space-x-3">
-                <button onclick="migrationApp.downloadErrorLog()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                    <i class="fas fa-download mr-2"></i>Download Error Log
-                </button>
-                <button onclick="migrationApp.hideErrorDetails()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Container for Migration Interface -->
-    <div id="migration-toast-container" class="migration-toast-container"></div>
-
-    <!-- Custom Alert System HTML Structure (Hidden by default) -->
-    <div id="custom-alert-overlay" class="custom-alert-overlay">
-        <div id="custom-alert" class="custom-alert">
-            <div class="custom-alert-header">
-                <div id="custom-alert-icon" class="custom-alert-icon">
-                    <i id="custom-alert-icon-symbol" class="fas fa-info-circle"></i>
-                </div>
-                <h3 id="custom-alert-title" class="custom-alert-title">Alert</h3>
-            </div>
-            <div id="custom-alert-message" class="custom-alert-message">
-                Alert message goes here
-            </div>
-            <div id="custom-alert-input-container" style="display: none;">
-                <input type="text" id="custom-alert-input" class="custom-alert-input" placeholder="Enter value...">
-            </div>
-            <div id="custom-alert-actions" class="custom-alert-actions">
-                <button id="custom-alert-cancel" class="custom-alert-btn secondary">Cancel</button>
-                <button id="custom-alert-confirm" class="custom-alert-btn primary">OK</button>
-            </div>
-        </div>
-    </div>
-
-=======
->>>>>>> origin/machine1-history
 </body>
 </html>
