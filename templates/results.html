@@ -11,15 +11,11 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-<<<<<<< HEAD
     <!-- Configuration Script -->
     <script>
         // Global configuration injected from Flask
         window.APP_CONFIG = {{ config | tojson }};
     </script>
-    
-=======
->>>>>>> origin/machine1-history
     <!-- Embedded CSS to avoid external file loading issues -->
     <style>
     :root {
@@ -207,7 +203,6 @@
         background: var(--primary-orange);
         color: var(--white);
     }
-<<<<<<< HEAD
 
     /* Custom Alert System Styles */
     .custom-alert-overlay {
@@ -511,8 +506,6 @@
         from { transform: scaleX(1); }
         to { transform: scaleX(0); }
     }
-=======
->>>>>>> origin/machine1-history
     </style>
 </head>
 <body>
@@ -520,24 +513,14 @@
     <nav class="modern-nav">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center justify-between">
-<<<<<<< HEAD
-                <a href="#" onclick="navigateTo('')" class="nav-brand">
-=======
-                <a href="/" class="nav-brand">
->>>>>>> origin/machine1-history
+                <a href="/rdlmigration" class="nav-brand">
                     <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
                     RDL Migration Tool
                 </a>
                 <div class="nav-links flex space-x-4">
-<<<<<<< HEAD
-                    <a href="#" onclick="navigateTo('')">Dashboard</a>
-                    <a href="#" onclick="navigateTo('migration')">Migration</a>
-                    <a href="#" onclick="navigateTo('results')" class="active">Results</a>
-=======
-                    <a href="/">Dashboard</a>
-                    <a href="/migration">Migration</a>
-                    <a href="/results" class="active">Results</a>
->>>>>>> origin/machine1-history
+                    <a href="/rdlmigration">Dashboard</a>
+                    <a href="/rdlmigration/migration">Migration</a>
+                    <a href="/rdlmigration/results" class="active">Results</a>
                 </div>
             </div>
         </div>
@@ -665,11 +648,7 @@
                         <i class="fas fa-inbox text-6xl mb-6" style="color: var(--light-blue);"></i>
                         <h3 class="text-2xl font-bold mb-3" style="color: var(--navy-blue);">No Results Found</h3>
                         <p class="text-lg mb-8" style="color: var(--dark-gray);">Start your first migration to see results here</p>
-<<<<<<< HEAD
-                        <a href="#" onclick="navigateTo('migration')" class="btn-primary px-8 py-4 rounded-xl text-lg">
-=======
-                        <a href="/migration" class="btn-primary px-8 py-4 rounded-xl text-lg">
->>>>>>> origin/machine1-history
+                        <a href="/rdlmigration/migration" class="btn-primary px-8 py-4 rounded-xl text-lg">
                             <i class="fas fa-rocket mr-3"></i>Start Migration
                         </a>
                     </div>
@@ -701,7 +680,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
     <!-- Toast Container -->
     <div id="toast-container" class="toast-container"></div>
 
@@ -931,11 +909,6 @@
     window.alert = (message) => alertSystem.alert(message);
     window.confirm = (message) => alertSystem.confirm(message);
     window.prompt = (message, defaultValue) => alertSystem.prompt(message, 'Input Required', defaultValue);
-
-=======
-    <!-- Embedded JavaScript to avoid external file loading issues -->
-    <script>
->>>>>>> origin/machine1-history
     // Embedded version of results.js with all functionality
     class ResultsManager {
         constructor() {
@@ -1005,11 +978,7 @@
             try {
                 this.showLoading(true);
                 
-<<<<<<< HEAD
-                const response = await fetch(APP_CONFIG.apiUrls.results + '/history');
-=======
-                const response = await fetch('/api/results/history');
->>>>>>> origin/machine1-history
+                const response = await fetch('/rdlmigration/api/results/history');
                 const data = await response.json();
                 
                 if (response.ok) {
@@ -1155,11 +1124,7 @@
                     e.stopPropagation();
                     const jobCard = e.target.closest('.job-card');
                     const jobId = jobCard.dataset.jobId;
-<<<<<<< HEAD
-                    window.location.href = `${APP_CONFIG.apiUrls.download}/${jobId}`;
-=======
-                    window.location.href = `/api/download/${jobId}`;
->>>>>>> origin/machine1-history
+                    window.location.href = `/rdlmigration/api/download/${jobId}`;
                 });
             });
             
@@ -1191,7 +1156,6 @@
             console.error(message);
             this.showLoading(false);
             
-<<<<<<< HEAD
             // Show error as toast notification
             alertSystem.showToast('error', 'Error', message);
             
@@ -1207,14 +1171,6 @@
                         <button onclick="location.reload()" class="btn-primary px-6 py-3 rounded-xl">
                             <i class="fas fa-sync-alt mr-2"></i>Try Again
                         </button>
-=======
-            const resultsGrid = document.getElementById('results-grid');
-            if (resultsGrid) {
-                resultsGrid.innerHTML = `
-                    <div class="p-8 text-center text-red-600">
-                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                        <p>${message}</p>
->>>>>>> origin/machine1-history
                     </div>
                 `;
                 resultsGrid.classList.remove('hidden');
@@ -1276,11 +1232,7 @@
                 this.currentJobId = jobId;
                 
                 // Load job files
-<<<<<<< HEAD
-                const response = await fetch(`${APP_CONFIG.apiUrls.results}/${jobId}/files`);
-=======
-                const response = await fetch(`/api/results/${jobId}/files`);
->>>>>>> origin/machine1-history
+                const response = await fetch(`/rdlmigration/api/results/${jobId}/files`);
                 const data = await response.json();
                 
                 if (!response.ok) {
@@ -1443,15 +1395,11 @@
             document.querySelectorAll('.file-preview-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
-<<<<<<< HEAD
                     e.stopPropagation();
-=======
->>>>>>> origin/machine1-history
                     const filePath = btn.dataset.filePath;
                     this.previewFile(filePath);
                 });
             });
-<<<<<<< HEAD
             
             // Re-bind modal close button with improved event handling
             const modalCloseBtn = document.getElementById('job-modal-close-btn');
@@ -1467,14 +1415,11 @@
                     this.closeJobModal();
                 });
             }
-=======
->>>>>>> origin/machine1-history
         }
         
         async previewFile(filePath) {
             try {
                 const previewArea = document.getElementById('file-preview-area');
-<<<<<<< HEAD
                 if (!previewArea) {
                     alertSystem.showToast('error', 'Preview Error', 'Preview area not found');
                     return;
@@ -1484,59 +1429,17 @@
                     alertSystem.showToast('error', 'Preview Error', 'No job selected for preview');
                     return;
                 }
-=======
-                if (!previewArea) return;
->>>>>>> origin/machine1-history
                 
                 // Show loading
                 previewArea.innerHTML = `
                     <div class="text-center">
                         <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 mx-auto" style="border-color: var(--primary-orange);"></div>
-<<<<<<< HEAD
                         <h3 class="text-lg font-semibold mb-2" style="color: var(--navy-blue);">Loading Preview</h3>
                         <p style="color: var(--dark-gray);">Please wait while we load the file content...</p>
                     </div>
                 `;
                 
-                const previewUrl = `${APP_CONFIG.apiUrls.results}/${this.currentJobId}/preview/${encodeURIComponent(filePath)}`;
-                console.log('Preview URL:', previewUrl);
-                
-                const response = await fetch(previewUrl);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    let errorMessage = 'Unknown error occurred';
-                    
-                    try {
-                        const errorData = JSON.parse(errorText);
-                        errorMessage = errorData.error || errorMessage;
-                    } catch (e) {
-                        // If not JSON, use status text
-                        errorMessage = response.statusText || `HTTP ${response.status}`;
-                    }
-                    
-                    alertSystem.showToast('error', 'Preview Failed', `Unable to preview file: ${errorMessage}`);
-                    
-                    previewArea.innerHTML = `
-                        <div class="text-center">
-                            <i class="fas fa-exclamation-triangle text-6xl mb-4" style="color: #ef4444; opacity: 0.5;"></i>
-                            <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Preview Not Available</h3>
-                            <p style="color: var(--dark-gray);" class="mb-4">${errorMessage}</p>
-                            <div class="space-y-2">
-                                <button onclick="resultsManager.previewFile('${filePath}')" class="btn-primary px-4 py-2 rounded-lg mr-2">
-                                    <i class="fas fa-sync-alt mr-2"></i>Retry Preview
-                                </button>
-                                <a href="${APP_CONFIG.apiUrls.results}/${this.currentJobId}/download/${encodeURIComponent(filePath)}" 
-                                   class="btn-secondary px-4 py-2 rounded-lg inline-block">
-                                    <i class="fas fa-download mr-2"></i>Download File
-                                </a>
-                            </div>
-=======
-                        <p style="color: var(--dark-gray);">Loading file preview...</p>
-                    </div>
-                `;
-                
-                const response = await fetch(`/api/results/${this.currentJobId}/preview/${filePath}`);
+                const response = await fetch(`/rdlmigration/api/results/${this.currentJobId}/preview/${encodeURIComponent(filePath)}`);
                 const data = await response.json();
                 
                 if (!response.ok) {
@@ -1545,17 +1448,11 @@
                             <i class="fas fa-exclamation-triangle text-6xl mb-4" style="color: #ef4444; opacity: 0.5;"></i>
                             <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Preview Error</h3>
                             <p style="color: var(--dark-gray);">${data.error}</p>
->>>>>>> origin/machine1-history
                         </div>
                     `;
                     return;
                 }
                 
-<<<<<<< HEAD
-                const data = await response.json();
-                
-=======
->>>>>>> origin/machine1-history
                 // Render file content based on type
                 let content = '';
                 
@@ -1603,11 +1500,7 @@
                             <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">File Preview</h3>
                             <p style="color: var(--dark-gray);">This file type cannot be previewed directly.</p>
                             <div class="mt-4">
-<<<<<<< HEAD
-                                <a href="${APP_CONFIG.apiUrls.results}/${this.currentJobId}/download/${filePath}" 
-=======
-                                <a href="/api/results/${this.currentJobId}/download/${filePath}" 
->>>>>>> origin/machine1-history
+                                <a href="/rdlmigration/api/results/${this.currentJobId}/download/${encodeURIComponent(filePath)}" 
                                    class="px-4 py-2 rounded-lg font-semibold" 
                                    style="background: var(--primary-orange); color: white;">
                                     <i class="fas fa-download mr-2"></i>Download File
@@ -1621,32 +1514,14 @@
                 
             } catch (error) {
                 console.error('Error previewing file:', error);
-<<<<<<< HEAD
                 
-                alertSystem.showToast('error', 'Preview Error', `Failed to load preview: ${error.message}`);
-                
-=======
->>>>>>> origin/machine1-history
                 const previewArea = document.getElementById('file-preview-area');
                 if (previewArea) {
                     previewArea.innerHTML = `
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle text-6xl mb-4" style="color: #ef4444; opacity: 0.5;"></i>
-<<<<<<< HEAD
-                            <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Connection Error</h3>
-                            <p style="color: var(--dark-gray);" class="mb-4">Unable to connect to preview service: ${error.message}</p>
-                            <div class="space-y-2">
-                                <button onclick="resultsManager.previewFile('${filePath}')" class="btn-primary px-4 py-2 rounded-lg mr-2">
-                                    <i class="fas fa-sync-alt mr-2"></i>Retry Preview
-                                </button>
-                                <button onclick="resultsManager.closeJobModal()" class="btn-secondary px-4 py-2 rounded-lg">
-                                    <i class="fas fa-arrow-left mr-2"></i>Back to Results
-                                </button>
-                            </div>
-=======
                             <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Preview Error</h3>
                             <p style="color: var(--dark-gray);">Error loading file preview: ${error.message}</p>
->>>>>>> origin/machine1-history
                         </div>
                     `;
                 }
@@ -1667,63 +1542,17 @@
             this.currentJobId = null;
         }
         
-<<<<<<< HEAD
-        async showCleanupConfirm() {
-            const confirmed = await alertSystem.confirm(
-                'Are you sure you want to delete old migration results? This action cannot be undone.',
-                'Confirm Cleanup',
-                { confirmText: 'Delete', cancelText: 'Cancel' }
-            );
-            
-            if (confirmed) {
-                alertSystem.showToast('info', 'Cleanup Started', 'Removing old migration results...');
-                console.log('Cleanup confirmed');
-                // Add actual cleanup logic here
-                setTimeout(() => {
-                    alertSystem.showToast('success', 'Cleanup Complete', 'Old migration results have been removed');
-                }, 2000);
-=======
         showCleanupConfirm() {
             if (confirm('Are you sure you want to delete old migration results? This action cannot be undone.')) {
                 console.log('Cleanup confirmed');
->>>>>>> origin/machine1-history
             }
         }
     }
 
-<<<<<<< HEAD
-    // Navigation function using dynamic URLs
-    function navigateTo(endpoint) {
-        if (endpoint === '') {
-            window.location.href = APP_CONFIG.pageUrls.dashboard;
-        } else {
-            window.location.href = APP_CONFIG.pageUrls[endpoint] || (APP_CONFIG.baseUrl + '/' + endpoint);
-        }
-    }
-    
-    // Global results manager instance
-    let resultsManager;
-
-    // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('🎯 Initializing Standalone Results Manager (External Access Compatible)');
-        resultsManager = new ResultsManager();
-        
-        // Additional modal close event binding for better reliability
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('job-details-modal');
-                if (modal && !modal.classList.contains('hidden')) {
-                    resultsManager.closeJobModal();
-                }
-            }
-        });
-=======
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', () => {
         console.log('🎯 Initializing Standalone Results Manager (External Access Compatible)');
         new ResultsManager();
->>>>>>> origin/machine1-history
     });
     </script>
 </body>

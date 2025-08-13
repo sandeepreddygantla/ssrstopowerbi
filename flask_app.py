@@ -147,6 +147,22 @@ def results():
     return render_template('results.html', config=Config.get_js_config())
 
 # Provide JavaScript configuration endpoint
+# Serve static files with proper routing
+@app.route(Config.get_url('static/<path:filename>'))
+def serve_static(filename):
+    """Serve static CSS and JS files with proper MIME types"""
+    response = send_from_directory('static', filename)
+    
+    # Set proper MIME types
+    if filename.endswith('.css'):
+        response.headers['Content-Type'] = 'text/css'
+    elif filename.endswith('.js'):
+        response.headers['Content-Type'] = 'application/javascript'
+    elif filename.endswith('.map'):
+        response.headers['Content-Type'] = 'application/json'
+    
+    return response
+
 @app.route(Config.get_url('api/config'))
 def get_client_config():
     """Provide client-side configuration"""

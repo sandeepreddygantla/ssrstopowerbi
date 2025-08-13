@@ -14,15 +14,11 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-<<<<<<< HEAD
     <!-- Configuration Script -->
     <script>
         // Global configuration injected from Flask
         window.APP_CONFIG = {{ config | tojson }};
     </script>
-    
-=======
->>>>>>> origin/machine1-history
     <!-- Embedded CSS for external access compatibility -->
     <style>
     :root {
@@ -260,41 +256,6 @@
         color: var(--primary-orange);
     }
 
-    .activity-section {
-        background: var(--white);
-        border-radius: 24px;
-        margin: 3rem auto;
-        max-width: 1200px;
-        padding: 3rem 2rem;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(0, 38, 119, 0.1);
-    }
-
-    .activity-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        margin-bottom: 1rem;
-    }
-
-    .activity-item:hover {
-        background: var(--light-cream);
-    }
-
-    .activity-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        background: rgba(255, 97, 43, 0.1);
-        color: var(--primary-orange);
-    }
 
     .loading-spinner {
         width: 40px;
@@ -322,7 +283,7 @@
         color: var(--light-blue);
         margin-bottom: 1rem;
     }
-<<<<<<< HEAD
+
 
     /* Custom Alert System Styles */
     .custom-alert-overlay {
@@ -487,8 +448,6 @@
         border-color: var(--primary-orange);
         box-shadow: 0 0 0 3px rgba(255, 97, 43, 0.1);
     }
-=======
->>>>>>> origin/machine1-history
     </style>
 </head>
 <body>
@@ -496,36 +455,20 @@
     <nav class="modern-nav">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center justify-between">
-<<<<<<< HEAD
-                <a href="#" onclick="navigateTo('')" class="nav-brand">
-=======
-                <a href="/" class="nav-brand">
->>>>>>> origin/machine1-history
+                <a href="/rdlmigration" class="nav-brand">
                     <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
                     RDL Migration Tool
                 </a>
                 <div class="nav-links">
-<<<<<<< HEAD
-                    <a href="#" onclick="navigateTo('')" class="active">
+                    <a href="/rdlmigration" class="active">
                         <i class="fas fa-home"></i>
                         Dashboard
                     </a>
-                    <a href="#" onclick="navigateTo('migration')">
+                    <a href="/rdlmigration/migration">
                         <i class="fas fa-upload"></i>
                         Migration
                     </a>
-                    <a href="#" onclick="navigateTo('results')">
-=======
-                    <a href="/" class="active">
-                        <i class="fas fa-home"></i>
-                        Dashboard
-                    </a>
-                    <a href="/migration">
-                        <i class="fas fa-upload"></i>
-                        Migration
-                    </a>
-                    <a href="/results">
->>>>>>> origin/machine1-history
+                    <a href="/rdlmigration/results">
                         <i class="fas fa-chart-line"></i>
                         Results
                     </a>
@@ -539,7 +482,7 @@
         <section class="hero-section">
             <h1 class="hero-title">
                 <i class="fas fa-magic" style="color: var(--primary-orange); margin-right: 1rem;"></i>
-                Enterprise RDL Migration Platform
+                RDL Migration Platform
             </h1>
             <p class="hero-subtitle">
                 Transform your SSRS reports to Power BI with AI-powered business logic analysis. 
@@ -547,11 +490,7 @@
             </p>
             
             <div class="flex items-center justify-center gap-6 flex-wrap">
-<<<<<<< HEAD
-                <a href="#" onclick="navigateTo('migration')" class="btn btn-primary">
-=======
-                <a href="/migration" class="btn btn-primary">
->>>>>>> origin/machine1-history
+                <a href="/rdlmigration/migration" class="btn btn-primary">
                     <i class="fas fa-rocket"></i>
                     Start Migration
                 </a>
@@ -601,7 +540,7 @@
         <section class="features-section">
             <h2 class="text-3xl font-bold text-center mb-2" style="color: var(--navy-blue);">
                 <i class="fas fa-star mr-3" style="color: var(--primary-orange);"></i>
-                Enterprise Features
+                Key Features
             </h2>
             <p class="text-center text-lg mb-8" style="color: var(--dark-gray);">
                 Comprehensive tools for large-scale SSRS to Power BI migrations
@@ -644,7 +583,7 @@
                     <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Enterprise Security</h3>
+                    <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">Secure Processing</h3>
                     <p style="color: var(--dark-gray);">Secure file handling with comprehensive error logging and detailed audit trails.</p>
                 </div>
                 
@@ -658,37 +597,6 @@
             </div>
         </section>
 
-        <!-- Recent Activity -->
-        <section class="activity-section">
-            <h2 class="text-3xl font-bold mb-2" style="color: var(--navy-blue);">
-                <i class="fas fa-history mr-3" style="color: var(--primary-orange);"></i>
-                Recent Activity
-            </h2>
-            <p class="text-lg mb-6" style="color: var(--dark-gray);">Latest migration jobs and system activity</p>
-            
-            <div id="activity-loading" class="text-center">
-                <div class="loading-spinner"></div>
-                <p style="color: var(--dark-gray);">Loading recent activity...</p>
-            </div>
-            
-            <div id="activity-list" class="hidden">
-                <!-- Activity items will be populated here -->
-            </div>
-            
-            <div id="activity-empty" class="empty-state hidden">
-                <i class="fas fa-inbox"></i>
-                <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">No Recent Activity</h3>
-                <p style="color: var(--dark-gray);">Start your first migration to see activity here</p>
-<<<<<<< HEAD
-                <a href="#" onclick="navigateTo('migration')" class="btn btn-primary mt-4">
-=======
-                <a href="/migration" class="btn btn-primary mt-4">
->>>>>>> origin/machine1-history
-                    <i class="fas fa-upload mr-2"></i>
-                    Upload Files
-                </a>
-            </div>
-        </section>
     </div>
 
     <!-- Embedded JavaScript -->
@@ -700,17 +608,12 @@
         
         init() {
             this.loadStatistics();
-            this.loadRecentActivity();
         }
         
         async loadStatistics() {
             try {
                 // Load statistics from API
-<<<<<<< HEAD
-                const response = await fetch(APP_CONFIG.apiUrls.results + '/history');
-=======
-                const response = await fetch('/api/results/history');
->>>>>>> origin/machine1-history
+                const response = await fetch('/rdlmigration/api/results/history');
                 const data = await response.json();
                 
                 if (response.ok && data.results) {
@@ -741,91 +644,14 @@
             }
         }
         
-        async loadRecentActivity() {
-            try {
-<<<<<<< HEAD
-                const response = await fetch(APP_CONFIG.apiUrls.recentActivity);
-=======
-                const response = await fetch('/api/recent-activity');
->>>>>>> origin/machine1-history
-                const data = await response.json();
-                
-                const loadingEl = document.getElementById('activity-loading');
-                const listEl = document.getElementById('activity-list');
-                const emptyEl = document.getElementById('activity-empty');
-                
-                loadingEl.classList.add('hidden');
-                
-                if (response.ok && data.activities && data.activities.length > 0) {
-                    listEl.classList.remove('hidden');
-                    listEl.innerHTML = data.activities.map(activity => this.renderActivityItem(activity)).join('');
-                } else {
-                    emptyEl.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error('Error loading recent activity:', error);
-                document.getElementById('activity-loading').classList.add('hidden');
-                document.getElementById('activity-empty').classList.remove('hidden');
-            }
-        }
-        
-        renderActivityItem(activity) {
-            const timeAgo = this.formatTimeAgo(activity.timestamp);
-            const iconClass = activity.icon === 'upload' ? 'fas fa-upload' : 'fas fa-cog';
-            
-            return `
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="${iconClass}"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-semibold" style="color: var(--navy-blue);">${activity.title}</h4>
-                        <p class="text-sm" style="color: var(--dark-gray);">${activity.description}</p>
-                    </div>
-                    <div class="text-sm" style="color: var(--dark-gray);">
-                        ${timeAgo}
-                    </div>
-                </div>
-            `;
-        }
-        
-        formatTimeAgo(timestamp) {
-            const now = new Date();
-            const time = new Date(timestamp);
-            const diff = now - time;
-            
-            const minutes = Math.floor(diff / 60000);
-            const hours = Math.floor(diff / 3600000);
-            const days = Math.floor(diff / 86400000);
-            
-            if (minutes < 1) return 'Just now';
-            if (minutes < 60) return `${minutes}m ago`;
-            if (hours < 24) return `${hours}h ago`;
-            if (days < 7) return `${days}d ago`;
-            
-            return time.toLocaleDateString();
-        }
     }
     
-<<<<<<< HEAD
     async function showQuickDemo() {
         await alertSystem.info(
             'This feature will provide a guided tour of the migration process, including file upload, similarity analysis, and Power BI conversion. Stay tuned for the interactive demo!',
             'Quick Demo Coming Soon'
         );
     }
-    
-    // Navigation function using dynamic URLs
-    function navigateTo(endpoint) {
-        if (endpoint === '') {
-            window.location.href = APP_CONFIG.pageUrls.dashboard;
-        } else {
-            window.location.href = APP_CONFIG.pageUrls[endpoint] || (APP_CONFIG.baseUrl + '/' + endpoint);
-        }
-=======
-    function showQuickDemo() {
-        alert('Quick Demo: This would show a guided tour of the migration process. Feature coming soon!');
->>>>>>> origin/machine1-history
     }
     
     // Initialize dashboard when page loads
@@ -833,7 +659,7 @@
         console.log('🎯 Initializing Dashboard Manager (External Access Compatible)');
         new DashboardManager();
     });
-<<<<<<< HEAD
+
 
     // Custom Alert System Class
     class CustomAlertSystem {
@@ -1010,9 +836,5 @@
             </div>
         </div>
     </div>
-
-=======
-    </script>
->>>>>>> origin/machine1-history
 </body>
 </html>
