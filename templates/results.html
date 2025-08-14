@@ -11,20 +11,55 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Shared Sidebar CSS -->
+    <link rel="stylesheet" href="/rdlmigration/static/css/shared-sidebar.css">
+    
     <!-- Configuration Script -->
     <script>
         // Global configuration injected from Flask
         window.APP_CONFIG = {{ config | tojson }};
     </script>
-    <!-- Embedded CSS to avoid external file loading issues -->
+    <!-- Page-specific styles -->
     <style>
-    :root {
-        --primary-orange: #FF612B;
-        --light-cream: #FAF8F2;
-        --light-blue: #D9F6FA;
-        --navy-blue: #002677;
-        --dark-gray: #4B4D4F;
-        --white: #FFFFFF;
+    
+    /* Removed sidebar open button styles - using internal toggle only */
+    .old-sidebar-open-btn {
+        position: fixed;
+        top: 25px;
+        left: 25px;
+        background: linear-gradient(135deg, var(--navy-blue) 0%, #003899 100%);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0, 38, 119, 0.25);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        z-index: 1001;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(-20px);
+        font-size: 1.1rem;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-open-btn.show {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+    }
+
+    .sidebar-open-btn:hover {
+        background: linear-gradient(135deg, var(--primary-orange) 0%, #FF7A47 100%);
+        transform: translateX(0) scale(1.05);
+        box-shadow: 0 8px 25px rgba(255, 97, 43, 0.4);
+    }
+
+    .sidebar-open-btn:active {
+        transform: translateX(0) scale(0.95);
     }
 
     .modern-gradient {
@@ -509,23 +544,37 @@
     </style>
 </head>
 <body>
-    <!-- Modern Navigation -->
-    <nav class="modern-nav">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-center justify-between">
-                <a href="/rdlmigration" class="nav-brand">
-                    <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
-                    RDL Migration Tool
-                </a>
-                <div class="nav-links flex space-x-4">
-                    <a href="/rdlmigration">Dashboard</a>
-                    <a href="/rdlmigration/migration">Migration</a>
-                    <a href="/rdlmigration/results" class="active">Results</a>
-                </div>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <i class="fas fa-exchange-alt" style="color: var(--primary-orange);"></i>
+                <span class="brand-text">RDL Migration Tool</span>
             </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-    </nav>
-
+        
+        <nav class="sidebar-nav">
+            <a href="/rdlmigration" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="/rdlmigration/migration" class="nav-item">
+                <i class="fas fa-upload"></i>
+                <span class="nav-text">Migration</span>
+            </a>
+            <a href="/rdlmigration/results" class="nav-item active">
+                <i class="fas fa-chart-line"></i>
+                <span class="nav-text">Results</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Main Content Wrapper -->
+    <div class="main-content" id="mainContent">
+    
     <div class="min-h-screen modern-gradient">
         <div class="max-w-7xl mx-auto p-6">
             <!-- Modern Header -->
@@ -656,6 +705,8 @@
             </div>
         </div>
     </div>
+    
+    </div> <!-- Close main-content -->
 
     <!-- Job Details Modal -->
     <div id="job-details-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -704,6 +755,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Shared Sidebar JavaScript -->
+    <script src="/rdlmigration/static/js/shared-sidebar.js"></script>
 
     <!-- Embedded JavaScript to avoid external file loading issues -->
     <script>

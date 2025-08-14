@@ -14,35 +14,43 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Shared Sidebar CSS -->
+    <link rel="stylesheet" href="/rdlmigration/static/css/shared-sidebar.css">
+    
     <!-- External CSS for better maintainability -->
     <link rel="stylesheet" href="/rdlmigration/static/css/migration.css">
 </head>
 <body>
-    <!-- Modern Navigation -->
-    <nav class="modern-nav">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-center justify-between">
-                <a href="/rdlmigration" class="nav-brand">
-                    <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
-                    RDL Migration Tool
-                </a>
-                <div class="nav-links">
-                    <a href="/rdlmigration">
-                        <i class="fas fa-home"></i>
-                        Dashboard
-                    </a>
-                    <a href="/rdlmigration/migration" class="active">
-                        <i class="fas fa-upload"></i>
-                        Migration
-                    </a>
-                    <a href="/rdlmigration/results">
-                        <i class="fas fa-chart-line"></i>
-                        Results
-                    </a>
-                </div>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <i class="fas fa-exchange-alt" style="color: var(--primary-orange);"></i>
+                <span class="brand-text">RDL Migration Tool</span>
             </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-    </nav>
+        
+        <nav class="sidebar-nav">
+            <a href="/rdlmigration" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="/rdlmigration/migration" class="nav-item active">
+                <i class="fas fa-upload"></i>
+                <span class="nav-text">Migration</span>
+            </a>
+            <a href="/rdlmigration/results" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span class="nav-text">Results</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Main Content Wrapper -->
+    <div class="main-content" id="mainContent">
 
     <div class="container mx-auto px-6">
         <!-- Hero Section -->
@@ -437,7 +445,19 @@
             </div>
         </section>
     </div>
+    
+    <!-- Background SVG - Right Bottom -->
+    <div class="background-decoration">
+        <img src="/rdlmigration/static/images/backgrounds/upload.svg" 
+             alt="" 
+             class="upload-illustration">
+    </div>
+    
+    </div> <!-- Close main-content -->
 
+    <!-- Shared Sidebar JavaScript -->
+    <script src="/rdlmigration/static/js/shared-sidebar.js"></script>
+    
     <!-- External JavaScript for better maintainability -->
     <script src="/rdlmigration/static/js/migration.js"></script>
 

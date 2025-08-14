@@ -14,35 +14,16 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Shared Sidebar CSS -->
+    <link rel="stylesheet" href="/rdlmigration/static/css/shared-sidebar.css">
+    
     <!-- Configuration Script -->
     <script>
         // Global configuration injected from Flask
         window.APP_CONFIG = {{ config | tojson }};
     </script>
-    <!-- Embedded CSS for external access compatibility -->
+    <!-- Page-specific styles -->
     <style>
-    :root {
-        --primary-orange: #FF612B;
-        --light-cream: #FAF8F2;
-        --light-blue: #D9F6FA;
-        --navy-blue: #002677;
-        --dark-gray: #4B4D4F;
-        --white: #FFFFFF;
-    }
-
-    body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: linear-gradient(135deg, var(--light-cream) 0%, var(--light-blue) 100%);
-        color: var(--navy-blue);
-        min-height: 100vh;
-    }
-
-    .modern-nav {
-        background: var(--white);
-        border-bottom: 1px solid rgba(0, 38, 119, 0.1);
-        padding: 1rem 0;
-        margin-bottom: 2rem;
-    }
 
     .nav-brand {
         color: var(--navy-blue);
@@ -451,31 +432,36 @@
     </style>
 </head>
 <body>
-    <!-- Modern Navigation -->
-    <nav class="modern-nav">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-center justify-between">
-                <a href="/rdlmigration" class="nav-brand">
-                    <i class="fas fa-exchange-alt mr-2" style="color: var(--primary-orange);"></i>
-                    RDL Migration Tool
-                </a>
-                <div class="nav-links">
-                    <a href="/rdlmigration" class="active">
-                        <i class="fas fa-home"></i>
-                        Dashboard
-                    </a>
-                    <a href="/rdlmigration/migration">
-                        <i class="fas fa-upload"></i>
-                        Migration
-                    </a>
-                    <a href="/rdlmigration/results">
-                        <i class="fas fa-chart-line"></i>
-                        Results
-                    </a>
-                </div>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <i class="fas fa-exchange-alt" style="color: var(--primary-orange);"></i>
+                <span class="brand-text">RDL Migration Tool</span>
             </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-    </nav>
+        
+        <nav class="sidebar-nav">
+            <a href="/rdlmigration" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="/rdlmigration/migration" class="nav-item">
+                <i class="fas fa-upload"></i>
+                <span class="nav-text">Migration</span>
+            </a>
+            <a href="/rdlmigration/results" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span class="nav-text">Results</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Main Content Wrapper -->
+    <div class="main-content" id="mainContent">
 
     <div class="container mx-auto px-6">
         <!-- Hero Section -->
@@ -597,9 +583,12 @@
             </div>
         </section>
 
-    </div>
+    </div> <!-- Close main-content -->
 
-    <!-- Embedded JavaScript -->
+    <!-- Shared Sidebar JavaScript -->
+    <script src="/rdlmigration/static/js/shared-sidebar.js"></script>
+
+    <!-- Dashboard JavaScript -->
     <script>
     class DashboardManager {
         constructor() {
