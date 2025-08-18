@@ -74,3 +74,7 @@ run.sh
 /tests/
 /results/
 /uploads/
+/similarity_cache/
+/embeddings_cache/
+test_sales_report.rdl
+test_customer_analysis.rdl

@@ -351,13 +351,15 @@ class MigrationManager {
             progressBar.style.width = '40%';
             progressText.textContent = '40%';
             
-            const response = await fetch('/rdlmigration/api/analyze', {
+            const response = await fetch('/rdlmigration/api/ai-analyze', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    files: filesData
+                    job_id: uploadResult.job_id,
+                    enable_ai_analysis: true,
+                    cache_enabled: true
                 })
             });
             
@@ -367,8 +369,8 @@ class MigrationManager {
             
             const result = await response.json();
             
-            if (result.success && result.results) {
-                this.analysisResults = result.results;
+            if (result.success && result.analysis_results) {
+                this.analysisResults = result.analysis_results;
                 
                 statusText.textContent = 'Analysis complete!';
                 progressBar.style.width = '100%';
@@ -403,16 +405,18 @@ class MigrationManager {
         
         const resultsContent = document.getElementById('results-content');
         
-        if (!this.analysisResults || !this.analysisResults.pairs) {
+        if (!this.analysisResults || !this.analysisResults.similarity_pairs) {
             resultsContent.innerHTML = '<div class="text-center" style="color: var(--dark-gray);">No analysis results available</div>';
             return;
         }
         
-        const pairs = this.analysisResults.pairs;
+        const pairs = this.analysisResults.similarity_pairs;
         const totalFiles = this.analysisResults.total_files || pairs.length;
-        const highSimilarityPairs = pairs.filter(p => p.similarity >= 70);
-        const mediumSimilarityPairs = pairs.filter(p => p.similarity >= 40 && p.similarity < 70);
-        const lowSimilarityPairs = pairs.filter(p => p.similarity < 40);
+        
+        // Filter pairs while preserving original indices
+        const highSimilarityPairs = pairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity >= 70);
+        const mediumSimilarityPairs = pairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity >= 40 && p.similarity < 70);
+        const lowSimilarityPairs = pairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity < 40);
         
         resultsContent.innerHTML = `
             <!-- Analysis Report Header -->
@@ -544,11 +548,11 @@ class MigrationManager {
                 
                 <!-- Action Buttons -->
                 <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button onclick="migrationManager.openSQLModal('${pair.file1}', '${pair.file2}', ${index})" style="background: #FF612B; color: #FFFFFF; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.875rem;">
+                    <button onclick="migrationManager.openSQLModal('${pair.file1}', '${pair.file2}', ${pair.originalIndex})" style="background: #FF612B; color: #FFFFFF; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.875rem;">
                         <i class="fas fa-code" style="margin-right: 0.5rem;"></i>
                         View SQL Queries
                     </button>
-                    <button onclick="migrationManager.exportPairAnalysis(${index})" style="background: #FFFFFF; color: #002677; border: 2px solid #002677; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.875rem;">
+                    <button onclick="migrationManager.exportPairAnalysis(${pair.originalIndex})" style="background: #FFFFFF; color: #002677; border: 2px solid #002677; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.875rem;">
                         <i class="fas fa-download" style="margin-right: 0.5rem;"></i>
                         Export Analysis
                     </button>
@@ -848,6 +852,8 @@ class MigrationManager {
     
     openSQLModal(file1, file2, pairIndex) {
         console.log('Opening SQL Modal - NEW IMPLEMENTATION');
+        console.log('DEBUG: Analysis results structure:', this.analysisResults);
+        console.log('DEBUG: Pair index:', pairIndex);
         
         // PREVENT any inline content from showing
         this.hideInlineAnalysisContent();
@@ -861,9 +867,12 @@ class MigrationManager {
         }
         
         // Get the pair data
-        const pair = this.analysisResults.pairs[pairIndex];
+        const pair = this.analysisResults.similarity_pairs[pairIndex];
+        console.log('DEBUG: Pair data:', pair);
         const file1Queries = pair.sql_queries?.file1_queries || [];
         const file2Queries = pair.sql_queries?.file2_queries || [];
+        console.log('DEBUG: File1 queries:', file1Queries);
+        console.log('DEBUG: File2 queries:', file2Queries);
         
         // Generate modal content with improved structure and better sizing
         modalContent.innerHTML = `
@@ -1821,6 +1830,544 @@ ORDER BY o.OrderDate DESC`
                 document.body.removeChild(notification);
             }, 300);
         }, 3000);
+    }
+    
+    getSimilarityColor(score) {
+        // Return color based on similarity score
+        if (score >= 80) {
+            return '#10B981'; // Green for high similarity
+        } else if (score >= 60) {
+            return '#F59E0B'; // Orange for medium-high similarity
+        } else if (score >= 40) {
+            return '#EF4444'; // Red for medium similarity
+        } else {
+            return '#6B7280'; // Gray for low similarity
+        }
+    }
+    
+    renderAdvancedSimilarityMatrix(analysisData) {
+        // Advanced similarity matrix for 50+ files
+        const files = [...new Set([
+            ...analysisData.pairs.map(p => p.file1),
+            ...analysisData.pairs.map(p => p.file2)
+        ])];
+        
+        if (files.length <= 10) {
+            return this.renderSimilarityPairs(analysisData.pairs, 'all');
+        }
+        
+        return `
+            <div class="similarity-matrix-container">
+                <div class="matrix-header">
+                    <h3><i class="fas fa-th"></i> Similarity Matrix (${files.length} files)</h3>
+                    <div class="matrix-controls">
+                        <button onclick="migrationManager.toggleMatrixView()" class="btn btn-outline btn-sm">
+                            <i class="fas fa-eye"></i> Toggle View
+                        </button>
+                        <button onclick="migrationManager.exportMatrix()" class="btn btn-outline btn-sm">
+                            <i class="fas fa-download"></i> Export Matrix
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="matrix-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #10B981;"></div>
+                        <span>High (80%+)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #F59E0B;"></div>
+                        <span>Medium (40-79%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #6B7280;"></div>
+                        <span>Low (<40%)</span>
+                    </div>
+                </div>
+                
+                <div class="matrix-scroll-container">
+                    ${this.renderMatrixGrid(files, analysisData.pairs)}
+                </div>
+                
+                <div class="matrix-summary">
+                    <div class="summary-stat">
+                        <span class="stat-label">High Similarity Pairs:</span>
+                        <span class="stat-value">${analysisData.pairs.filter(p => p.similarity >= 80).length}</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-label">Medium Similarity Pairs:</span>
+                        <span class="stat-value">${analysisData.pairs.filter(p => p.similarity >= 40 && p.similarity < 80).length}</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-label">Consolidation Opportunities:</span>
+                        <span class="stat-value">${this.countConsolidationOpportunities(analysisData.pairs)}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <style>
+                .similarity-matrix-container {
+                    background: white;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                }
+                
+                .matrix-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1rem;
+                    padding-bottom: 1rem;
+                    border-bottom: 1px solid #E5E7EB;
+                }
+                
+                .matrix-controls {
+                    display: flex;
+                    gap: 0.5rem;
+                }
+                
+                .matrix-legend {
+                    display: flex;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                    padding: 0.75rem;
+                    background: #F9FAFB;
+                    border-radius: 8px;
+                }
+                
+                .legend-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    font-size: 0.875rem;
+                }
+                
+                .legend-color {
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 4px;
+                }
+                
+                .matrix-scroll-container {
+                    overflow: auto;
+                    max-height: 500px;
+                    border: 1px solid #E5E7EB;
+                    border-radius: 8px;
+                    margin-bottom: 1rem;
+                }
+                
+                .matrix-grid {
+                    display: grid;
+                    gap: 1px;
+                    background: #E5E7EB;
+                    min-width: max-content;
+                }
+                
+                .matrix-cell {
+                    background: white;
+                    padding: 0.5rem;
+                    text-align: center;
+                    font-size: 0.75rem;
+                    min-width: 80px;
+                    min-height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                
+                .matrix-cell:hover {
+                    transform: scale(1.05);
+                    z-index: 10;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                }
+                
+                .matrix-cell.header {
+                    background: #F3F4F6;
+                    font-weight: 600;
+                    writing-mode: vertical-rl;
+                    text-orientation: mixed;
+                }
+                
+                .matrix-cell.diagonal {
+                    background: #F9FAFB;
+                    color: #9CA3AF;
+                }
+                
+                .matrix-summary {
+                    display: flex;
+                    gap: 2rem;
+                    padding: 1rem;
+                    background: #F9FAFB;
+                    border-radius: 8px;
+                }
+                
+                .summary-stat {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.25rem;
+                }
+                
+                .stat-label {
+                    font-size: 0.875rem;
+                    color: #6B7280;
+                }
+                
+                .stat-value {
+                    font-size: 1.25rem;
+                    font-weight: 700;
+                    color: #1F2937;
+                }
+            </style>
+        `;
+    }
+    
+    renderMatrixGrid(files, pairs) {
+        // Create similarity lookup
+        const similarityLookup = {};
+        pairs.forEach(pair => {
+            const key1 = `${pair.file1}:${pair.file2}`;
+            const key2 = `${pair.file2}:${pair.file1}`;
+            similarityLookup[key1] = pair.similarity;
+            similarityLookup[key2] = pair.similarity;
+        });
+        
+        const gridSize = files.length + 1;
+        
+        let gridHTML = `<div class="matrix-grid" style="grid-template-columns: repeat(${gridSize}, 1fr);">`;
+        
+        // Header row
+        gridHTML += '<div class="matrix-cell header"></div>'; // Top-left corner
+        files.forEach(file => {
+            const shortName = file.length > 12 ? file.substring(0, 12) + '...' : file;
+            gridHTML += `<div class="matrix-cell header" title="${file}">${shortName}</div>`;
+        });
+        
+        // Data rows
+        files.forEach((rowFile, i) => {
+            // Row header
+            const shortName = rowFile.length > 12 ? rowFile.substring(0, 12) + '...' : rowFile;
+            gridHTML += `<div class="matrix-cell header" title="${rowFile}">${shortName}</div>`;
+            
+            // Data cells
+            files.forEach((colFile, j) => {
+                if (i === j) {
+                    // Diagonal cell
+                    gridHTML += '<div class="matrix-cell diagonal">—</div>';
+                } else {
+                    const similarity = similarityLookup[`${rowFile}:${colFile}`] || 0;
+                    const color = this.getSimilarityColor(similarity);
+                    const textColor = similarity > 60 ? 'white' : 'black';
+                    
+                    gridHTML += `
+                        <div class="matrix-cell" 
+                             style="background-color: ${color}; color: ${textColor};"
+                             onclick="migrationManager.showPairDetails('${rowFile}', '${colFile}', ${similarity})"
+                             title="Similarity: ${similarity.toFixed(1)}%">
+                            ${similarity > 0 ? similarity.toFixed(0) + '%' : '—'}
+                        </div>
+                    `;
+                }
+            });
+        });
+        
+        gridHTML += '</div>';
+        return gridHTML;
+    }
+    
+    countConsolidationOpportunities(pairs) {
+        // Count potential consolidation clusters
+        const highSimilarityPairs = pairs.filter(p => p.similarity >= 75);
+        const fileGroups = new Set();
+        
+        highSimilarityPairs.forEach(pair => {
+            const key = [pair.file1, pair.file2].sort().join(':');
+            fileGroups.add(key);
+        });
+        
+        return fileGroups.size;
+    }
+    
+    toggleMatrixView() {
+        const container = document.querySelector('.matrix-scroll-container');
+        if (container.style.maxHeight === '500px') {
+            container.style.maxHeight = 'none';
+            container.style.height = 'auto';
+        } else {
+            container.style.maxHeight = '500px';
+        }
+    }
+    
+    exportMatrix() {
+        // Export similarity matrix data
+        if (!this.results || !this.results.pairs) {
+            this.showNotification('No analysis data to export', 'error');
+            return;
+        }
+        
+        const csvData = this.convertMatrixToCSV(this.results.pairs);
+        const blob = new Blob([csvData], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `similarity_matrix_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        this.showNotification('Matrix exported successfully');
+    }
+    
+    convertMatrixToCSV(pairs) {
+        // Get all unique files
+        const files = [...new Set([
+            ...pairs.map(p => p.file1),
+            ...pairs.map(p => p.file2)
+        ])];
+        
+        // Create similarity lookup
+        const similarityLookup = {};
+        pairs.forEach(pair => {
+            similarityLookup[`${pair.file1}:${pair.file2}`] = pair.similarity;
+            similarityLookup[`${pair.file2}:${pair.file1}`] = pair.similarity;
+        });
+        
+        // Build CSV
+        let csv = 'File,' + files.join(',') + '\n';
+        
+        files.forEach(rowFile => {
+            let row = `"${rowFile}",`;
+            const values = files.map(colFile => {
+                if (rowFile === colFile) return '100';
+                return (similarityLookup[`${rowFile}:${colFile}`] || 0).toFixed(1);
+            });
+            row += values.join(',');
+            csv += row + '\n';
+        });
+        
+        return csv;
+    }
+    
+    showPairDetails(file1, file2, similarity) {
+        // Show detailed comparison for a specific pair
+        if (!this.results || !this.results.pairs) return;
+        
+        const pair = this.results.pairs.find(p => 
+            (p.file1 === file1 && p.file2 === file2) || 
+            (p.file1 === file2 && p.file2 === file1)
+        );
+        
+        if (pair) {
+            this.openSQLModal(file1, file2, 0); // Reuse existing modal
+        } else {
+            this.showNotification(`No detailed analysis available for ${file1} ↔ ${file2}`, 'info');
+        }
+    }
+    
+    renderAIInsights(analysisData) {
+        // Render AI-powered insights and recommendations
+        if (!analysisData.ai_insights) {
+            return '';
+        }
+        
+        const insights = analysisData.ai_insights;
+        
+        return `
+            <div class="ai-insights-container modern-card">
+                <div class="insights-header">
+                    <h3><i class="fas fa-brain"></i> AI-Powered Insights</h3>
+                    <div class="ai-badge">
+                        <i class="fas fa-robot"></i>
+                        AI Analysis
+                    </div>
+                </div>
+                
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Consolidation Potential</h4>
+                            <div class="insight-value">${insights.consolidation_score || 'N/A'}%</div>
+                            <p class="insight-description">
+                                Based on query similarity and business logic analysis
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <div class="insight-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Token Efficiency</h4>
+                            <div class="insight-value">${insights.token_savings || 'N/A'}%</div>
+                            <p class="insight-description">
+                                Cost optimization through smart pre-filtering
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <div class="insight-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Time Savings</h4>
+                            <div class="insight-value">${insights.time_savings || 'N/A'} hrs</div>
+                            <p class="insight-description">
+                                Estimated migration time reduction
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-recommendations">
+                    <h4><i class="fas fa-lightbulb"></i> Smart Recommendations</h4>
+                    <div class="recommendations-list">
+                        ${(insights.recommendations || []).map(rec => `
+                            <div class="recommendation-item">
+                                <div class="rec-priority ${rec.priority.toLowerCase()}">
+                                    ${rec.priority}
+                                </div>
+                                <div class="rec-content">
+                                    <strong>${rec.title}</strong>
+                                    <p>${rec.description}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+            
+            <style>
+                .ai-insights-container {
+                    margin: 2rem 0;
+                    padding: 1.5rem;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border-radius: 16px;
+                }
+                
+                .insights-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1.5rem;
+                }
+                
+                .ai-badge {
+                    background: rgba(255,255,255,0.2);
+                    padding: 0.5rem 1rem;
+                    border-radius: 20px;
+                    font-size: 0.875rem;
+                    backdrop-filter: blur(10px);
+                }
+                
+                .insights-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 1.5rem;
+                    margin-bottom: 2rem;
+                }
+                
+                .insight-card {
+                    background: rgba(255,255,255,0.1);
+                    padding: 1.5rem;
+                    border-radius: 12px;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    display: flex;
+                    gap: 1rem;
+                }
+                
+                .insight-icon {
+                    font-size: 2rem;
+                    color: #FCD34D;
+                }
+                
+                .insight-content h4 {
+                    margin: 0 0 0.5rem 0;
+                    font-size: 1rem;
+                    font-weight: 600;
+                }
+                
+                .insight-value {
+                    font-size: 2rem;
+                    font-weight: 700;
+                    color: #FCD34D;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .insight-description {
+                    font-size: 0.875rem;
+                    opacity: 0.8;
+                    margin: 0;
+                }
+                
+                .ai-recommendations {
+                    background: rgba(255,255,255,0.1);
+                    padding: 1.5rem;
+                    border-radius: 12px;
+                }
+                
+                .ai-recommendations h4 {
+                    margin: 0 0 1rem 0;
+                    color: #FCD34D;
+                }
+                
+                .recommendation-item {
+                    display: flex;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                    align-items: flex-start;
+                }
+                
+                .rec-priority {
+                    padding: 0.25rem 0.75rem;
+                    border-radius: 12px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    min-width: 60px;
+                    text-align: center;
+                }
+                
+                .rec-priority.high {
+                    background: #EF4444;
+                    color: white;
+                }
+                
+                .rec-priority.medium {
+                    background: #F59E0B;
+                    color: white;
+                }
+                
+                .rec-priority.low {
+                    background: #10B981;
+                    color: white;
+                }
+                
+                .rec-content {
+                    flex: 1;
+                }
+                
+                .rec-content strong {
+                    color: #FCD34D;
+                }
+                
+                .rec-content p {
+                    margin: 0.25rem 0 0 0;
+                    opacity: 0.9;
+                    font-size: 0.875rem;
+                }
+            </style>
+        `;
     }
 }
 

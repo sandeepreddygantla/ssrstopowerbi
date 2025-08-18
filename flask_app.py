@@ -1311,6 +1311,416 @@ def service_status():
             'active_workers': len([j for j in active_jobs.values() if j.status == 'running'])
         })
 
+# AI-Enhanced Analysis Endpoints
+@app.route(Config.get_url('api/ai-analyze'), methods=['POST'])
+def ai_analyze():
+    """AI-enhanced batch analysis of RDL files with cost optimization"""
+    try:
+        data = request.get_json()
+        job_id = data.get('job_id')
+        enable_ai = data.get('enable_ai_analysis', True)
+        cache_enabled = data.get('cache_enabled', True)
+        
+        if not job_id:
+            return jsonify({'error': 'job_id is required'}), 400
+        
+        # Get uploaded files for this job
+        upload_dir = Path(Config.UPLOAD_FOLDER) / job_id
+        if not upload_dir.exists():
+            return jsonify({'error': 'Job not found'}), 404
+        
+        rdl_files = []
+        for file_path in upload_dir.glob('*.rdl'):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                rdl_files.append({
+                    'path': str(file_path),
+                    'content': content,
+                    'filename': file_path.name
+                })
+            except Exception as e:
+                print(f"Error reading {file_path}: {e}")
+                continue
+        
+        if not rdl_files:
+            return jsonify({'error': 'No valid RDL files found'}), 404
+        
+        # Initialize AI-enhanced analyzer
+        analyzer = RDLBusinessAnalyzer(
+            enable_ai_analysis=enable_ai, 
+            cache_enabled=cache_enabled
+        )
+        
+        # Perform AI-enhanced analysis
+        analysis_results = analyzer.analyze_rdl_batch_ai_enhanced(rdl_files)
+        
+        # Store results
+        results_dir = Path(Config.RESULTS_FOLDER) / job_id
+        results_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save analysis results
+        results_file = results_dir / 'ai_analysis_results.json'
+        with open(results_file, 'w') as f:
+            # Convert datetime objects to strings for JSON serialization
+            serializable_results = convert_datetime_to_string(analysis_results)
+            json.dump(serializable_results, f, indent=2)
+        
+        # Generate summary report
+        summary = generate_ai_analysis_summary(analysis_results)
+        
+        # SQL queries are already enriched in the backend migration service
+        # No need for additional enrichment here
+        
+        return jsonify({
+            'success': True,
+            'job_id': job_id,
+            'analysis_results': analysis_results,
+            'summary': summary,
+            'files_analyzed': len(rdl_files),
+            'ai_enabled': enable_ai,
+            'cache_enabled': cache_enabled
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Analysis failed: {str(e)}'}), 500
+
+@app.route(Config.get_url('api/query-preview'), methods=['POST'])
+def query_preview():
+    """Get detailed query comparison with syntax highlighting"""
+    try:
+        data = request.get_json()
+        query1 = data.get('query1', '')
+        query2 = data.get('query2', '')
+        dialect = data.get('dialect', 'auto')
+        
+        if not query1 or not query2:
+            return jsonify({'error': 'Both queries are required'}), 400
+        
+        # Import query preprocessor for detailed analysis
+        from src.utils.query_preprocessor import QueryPreprocessor
+        from src.utils.sql_dialect_detector import SQLDialectDetector
+        
+        preprocessor = QueryPreprocessor()
+        dialect_detector = SQLDialectDetector()
+        
+        # Analyze both queries
+        features1 = preprocessor.preprocess_query(query1, dialect)
+        features2 = preprocessor.preprocess_query(query2, dialect)
+        
+        # Detect dialects
+        dialect1 = dialect_detector.detect_dialect(query1)
+        dialect2 = dialect_detector.detect_dialect(query2)
+        
+        # Compare features
+        similarities = preprocessor.compare_query_features(features1, features2)
+        
+        # Generate syntax-highlighted versions
+        highlighted_query1 = apply_syntax_highlighting(query1, dialect1.primary_dialect.value)
+        highlighted_query2 = apply_syntax_highlighting(query2, dialect2.primary_dialect.value)
+        
+        # Find differences
+        differences = find_query_differences(features1, features2)
+        
+        return jsonify({
+            'success': True,
+            'query1': {
+                'original': query1,
+                'highlighted': highlighted_query1,
+                'dialect': dialect1.primary_dialect.value,
+                'features': {
+                    'tables': features1.tables,
+                    'columns': features1.columns,
+                    'functions': features1.functions,
+                    'complexity': features1.complexity_score,
+                    'business_intent': features1.business_intent
+                }
+            },
+            'query2': {
+                'original': query2,
+                'highlighted': highlighted_query2,
+                'dialect': dialect2.primary_dialect.value,
+                'features': {
+                    'tables': features2.tables,
+                    'columns': features2.columns,
+                    'functions': features2.functions,
+                    'complexity': features2.complexity_score,
+                    'business_intent': features2.business_intent
+                }
+            },
+            'similarities': similarities,
+            'differences': differences,
+            'overall_similarity': sum(similarities.values()) / len(similarities) if similarities else 0
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Query preview failed: {str(e)}'}), 500
+
+@app.route(Config.get_url('api/batch-analysis'), methods=['POST'])
+def batch_analysis():
+    """Handle large-scale batch analysis efficiently"""
+    try:
+        data = request.get_json()
+        job_id = data.get('job_id')
+        batch_size = data.get('batch_size', 10)  # Process in smaller batches
+        enable_caching = data.get('enable_caching', True)
+        optimize_tokens = data.get('optimize_tokens', True)
+        
+        if not job_id:
+            return jsonify({'error': 'job_id is required'}), 400
+        
+        # Get files to process
+        upload_dir = Path(Config.UPLOAD_FOLDER) / job_id
+        rdl_files = list(upload_dir.glob('*.rdl'))
+        
+        if not rdl_files:
+            return jsonify({'error': 'No RDL files found'}), 404
+        
+        # If there are many files, process in background
+        if len(rdl_files) > 20:
+            # Start background processing job
+            background_job_id = str(uuid.uuid4())
+            
+            def process_large_batch():
+                try:
+                    results = process_files_in_batches(
+                        rdl_files, 
+                        batch_size, 
+                        enable_caching, 
+                        optimize_tokens,
+                        background_job_id
+                    )
+                    
+                    # Store final results
+                    results_dir = Path(Config.RESULTS_FOLDER) / job_id
+                    results_dir.mkdir(parents=True, exist_ok=True)
+                    
+                    results_file = results_dir / f'batch_analysis_{background_job_id}.json'
+                    with open(results_file, 'w') as f:
+                        json.dump(convert_datetime_to_string(results), f, indent=2)
+                    
+                    # Emit completion via WebSocket
+                    socketio.emit('batch_analysis_complete', {
+                        'job_id': job_id,
+                        'background_job_id': background_job_id,
+                        'results': results
+                    })
+                    
+                except Exception as e:
+                    socketio.emit('batch_analysis_error', {
+                        'job_id': job_id,
+                        'background_job_id': background_job_id,
+                        'error': str(e)
+                    })
+            
+            # Start background thread
+            thread = threading.Thread(target=process_large_batch)
+            thread.daemon = True
+            thread.start()
+            
+            return jsonify({
+                'success': True,
+                'job_id': job_id,
+                'background_job_id': background_job_id,
+                'status': 'processing',
+                'total_files': len(rdl_files),
+                'batch_size': batch_size,
+                'estimated_time': estimate_processing_time(len(rdl_files))
+            })
+        
+        else:
+            # Process small batches synchronously
+            results = process_files_in_batches(
+                rdl_files, 
+                batch_size, 
+                enable_caching, 
+                optimize_tokens
+            )
+            
+            return jsonify({
+                'success': True,
+                'job_id': job_id,
+                'results': results,
+                'files_processed': len(rdl_files)
+            })
+        
+    except Exception as e:
+        return jsonify({'error': f'Batch analysis failed: {str(e)}'}), 500
+
+# Helper functions for new AI endpoints
+def convert_datetime_to_string(obj):
+    """Convert datetime objects and other non-serializable objects to strings for JSON serialization"""
+    from dataclasses import is_dataclass, asdict
+    
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    elif is_dataclass(obj):
+        # Convert dataclass to dictionary
+        return convert_datetime_to_string(asdict(obj))
+    elif isinstance(obj, dict):
+        return {k: convert_datetime_to_string(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_datetime_to_string(item) for item in obj]
+    else:
+        return obj
+
+def generate_ai_analysis_summary(results):
+    """Generate summary of AI analysis results"""
+    total_files = results.get('total_files', 0)
+    total_queries = results.get('total_queries', 0)
+    similarity_pairs = results.get('similarity_pairs', [])
+    recommendations = results.get('consolidation_recommendations', {})
+    
+    high_similarity = len([p for p in similarity_pairs if p.get('similarity', 0) >= 80])
+    medium_similarity = len([p for p in similarity_pairs if 50 <= p.get('similarity', 0) < 80])
+    
+    return {
+        'total_files': total_files,
+        'total_queries': total_queries,
+        'total_comparisons': len(similarity_pairs),
+        'high_similarity_pairs': high_similarity,
+        'medium_similarity_pairs': medium_similarity,
+        'consolidation_opportunities': recommendations.get('high_similarity_count', 0),
+        'estimated_savings': recommendations.get('estimated_cost_savings', {}),
+        'token_usage': recommendations.get('token_usage_summary', {})
+    }
+
+def apply_syntax_highlighting(query, dialect):
+    """Apply basic syntax highlighting to SQL query"""
+    keywords = [
+        'SELECT', 'FROM', 'WHERE', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER',
+        'GROUP BY', 'ORDER BY', 'HAVING', 'UNION', 'INSERT', 'UPDATE', 'DELETE',
+        'CREATE', 'ALTER', 'DROP', 'AND', 'OR', 'NOT', 'IN', 'EXISTS', 'BETWEEN',
+        'LIKE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'AS', 'COUNT', 'SUM',
+        'AVG', 'MAX', 'MIN', 'DISTINCT'
+    ]
+    
+    highlighted = query
+    for keyword in keywords:
+        pattern = r'\b' + keyword + r'\b'
+        replacement = f'<span class="sql-keyword">{keyword}</span>'
+        highlighted = re.sub(pattern, replacement, highlighted, flags=re.IGNORECASE)
+    
+    # Highlight strings
+    highlighted = re.sub(r"'([^']*)'", r"<span class='sql-string'>'\\1'</span>", highlighted)
+    
+    # Highlight comments
+    highlighted = re.sub(r'--([^\n]*)', r"<span class='sql-comment'>--\\1</span>", highlighted)
+    
+    return highlighted
+
+def find_query_differences(features1, features2):
+    """Find differences between query features"""
+    differences = {
+        'unique_to_query1': {},
+        'unique_to_query2': {},
+        'common_elements': {}
+    }
+    
+    # Compare tables
+    tables1 = set(features1.tables)
+    tables2 = set(features2.tables)
+    differences['unique_to_query1']['tables'] = list(tables1 - tables2)
+    differences['unique_to_query2']['tables'] = list(tables2 - tables1)
+    differences['common_elements']['tables'] = list(tables1 & tables2)
+    
+    # Compare columns
+    cols1 = set(features1.columns)
+    cols2 = set(features2.columns)
+    differences['unique_to_query1']['columns'] = list(cols1 - cols2)
+    differences['unique_to_query2']['columns'] = list(cols2 - cols1)
+    differences['common_elements']['columns'] = list(cols1 & cols2)
+    
+    # Compare functions
+    funcs1 = set(features1.functions)
+    funcs2 = set(features2.functions)
+    differences['unique_to_query1']['functions'] = list(funcs1 - funcs2)
+    differences['unique_to_query2']['functions'] = list(funcs2 - funcs1)
+    differences['common_elements']['functions'] = list(funcs1 & funcs2)
+    
+    return differences
+
+def process_files_in_batches(rdl_files, batch_size, enable_caching, optimize_tokens, job_id=None):
+    """Process files in efficient batches"""
+    results = {
+        'total_files': len(rdl_files),
+        'batches_processed': 0,
+        'similarity_pairs': [],
+        'processing_stats': {
+            'start_time': datetime.now().isoformat(),
+            'batches': []
+        }
+    }
+    
+    # Process files in batches
+    for i in range(0, len(rdl_files), batch_size):
+        batch = rdl_files[i:i + batch_size]
+        batch_start = datetime.now()
+        
+        # Prepare batch data
+        batch_data = []
+        for file_path in batch:
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                batch_data.append({
+                    'path': str(file_path),
+                    'content': content,
+                    'filename': file_path.name
+                })
+            except Exception as e:
+                print(f"Error reading {file_path}: {e}")
+                continue
+        
+        # Analyze batch
+        if batch_data:
+            analyzer = RDLBusinessAnalyzer(
+                enable_ai_analysis=optimize_tokens, 
+                cache_enabled=enable_caching
+            )
+            
+            batch_results = analyzer.analyze_rdl_batch_ai_enhanced(batch_data)
+            
+            # Merge results
+            results['similarity_pairs'].extend(batch_results.get('similarity_pairs', []))
+            results['batches_processed'] += 1
+            
+            # Record batch stats
+            batch_time = (datetime.now() - batch_start).total_seconds()
+            results['processing_stats']['batches'].append({
+                'batch_number': results['batches_processed'],
+                'files_in_batch': len(batch_data),
+                'processing_time': batch_time,
+                'pairs_found': len(batch_results.get('similarity_pairs', []))
+            })
+            
+            # Emit progress if job_id provided
+            if job_id:
+                progress = (i + len(batch)) / len(rdl_files) * 100
+                socketio.emit('batch_progress', {
+                    'job_id': job_id,
+                    'progress': progress,
+                    'batch': results['batches_processed'],
+                    'files_processed': i + len(batch)
+                })
+    
+    results['processing_stats']['end_time'] = datetime.now().isoformat()
+    return results
+
+def estimate_processing_time(file_count):
+    """Estimate processing time based on file count"""
+    base_time = file_count * 0.5
+    ai_time = file_count * 0.2
+    
+    total_seconds = base_time + ai_time
+    return {
+        'estimated_seconds': total_seconds,
+        'estimated_minutes': total_seconds / 60,
+        'estimated_time_string': f"{int(total_seconds // 60)}m {int(total_seconds % 60)}s"
+    }
+
 # Shutdown handler
 import atexit
 
