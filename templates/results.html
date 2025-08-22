@@ -1446,12 +1446,13 @@
         }
         
         bindFilePreviewEvents() {
+            const currentJobId = this.currentJobId; // Capture the job ID in closure
             document.querySelectorAll('.file-preview-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     const filePath = btn.dataset.filePath;
-                    this.previewFile(filePath);
+                    this.previewFile(filePath, currentJobId);
                 });
             });
             
@@ -1471,7 +1472,7 @@
             }
         }
         
-        async previewFile(filePath) {
+        async previewFile(filePath, jobId = null) {
             try {
                 const previewArea = document.getElementById('file-preview-area');
                 if (!previewArea) {
@@ -1479,7 +1480,9 @@
                     return;
                 }
                 
-                if (!this.currentJobId) {
+                // Use passed jobId or fallback to this.currentJobId
+                const currentJobId = jobId || this.currentJobId;
+                if (!currentJobId) {
                     alertSystem.showToast('error', 'Preview Error', 'No job selected for preview');
                     return;
                 }
@@ -1493,7 +1496,7 @@
                     </div>
                 `;
                 
-                const response = await fetch(`/rdlmigration/api/results/${this.currentJobId}/preview/${encodeURIComponent(filePath)}`);
+                const response = await fetch(`/rdlmigration/api/results/${currentJobId}/preview/${encodeURIComponent(filePath)}`);
                 const data = await response.json();
                 
                 if (!response.ok) {
@@ -1554,7 +1557,7 @@
                             <h3 class="text-xl font-semibold mb-2" style="color: var(--navy-blue);">File Preview</h3>
                             <p style="color: var(--dark-gray);">This file type cannot be previewed directly.</p>
                             <div class="mt-4">
-                                <a href="/rdlmigration/api/results/${this.currentJobId}/download/${encodeURIComponent(filePath)}" 
+                                <a href="/rdlmigration/api/results/${currentJobId}/download/${encodeURIComponent(filePath)}" 
                                    class="px-4 py-2 rounded-lg font-semibold" 
                                    style="background: var(--primary-orange); color: white;">
                                     <i class="fas fa-download mr-2"></i>Download File

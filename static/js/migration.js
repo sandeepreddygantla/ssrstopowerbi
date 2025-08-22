@@ -413,10 +413,13 @@ class MigrationManager {
         const pairs = this.analysisResults.similarity_pairs;
         const totalFiles = this.analysisResults.total_files || pairs.length;
         
+        // Filter out duplicate pairs and prioritize clean filenames over generic file_X_ prefixes
+        const filteredPairs = this.filterDuplicateAnalysisPairs(pairs);
+        
         // Filter pairs while preserving original indices
-        const highSimilarityPairs = pairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity >= 70);
-        const mediumSimilarityPairs = pairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity >= 40 && p.similarity < 70);
-        const lowSimilarityPairs = pairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity < 40);
+        const highSimilarityPairs = filteredPairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity >= 70);
+        const mediumSimilarityPairs = filteredPairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity >= 40 && p.similarity < 70);
+        const lowSimilarityPairs = filteredPairs.map((p, i) => ({...p, originalIndex: i})).filter(p => p.similarity < 40);
         
         resultsContent.innerHTML = `
             <!-- Analysis Report Header -->
@@ -503,6 +506,44 @@ class MigrationManager {
         this.updateMigrationPreview();
     }
     
+    filterDuplicateAnalysisPairs(pairs) {
+        // Create a map to track file pair combinations
+        const pairMap = new Map();
+        
+        pairs.forEach(pair => {
+            // Normalize file names by removing file_X_ prefixes
+            const file1Clean = pair.file1.replace(/^file_\d+_/, '');
+            const file2Clean = pair.file2.replace(/^file_\d+_/, '');
+            
+            // Create a consistent key for the pair (alphabetically sorted)
+            const sortedFiles = [file1Clean, file2Clean].sort();
+            const pairKey = `${sortedFiles[0]}_vs_${sortedFiles[1]}`;
+            
+            // Check if we already have this pair
+            if (pairMap.has(pairKey)) {
+                const existing = pairMap.get(pairKey);
+                
+                // Prioritize pairs with clean filenames (no file_X_ prefix)
+                const currentHasCleanNames = !pair.file1.startsWith('file_') && !pair.file2.startsWith('file_');
+                const existingHasCleanNames = !existing.file1.startsWith('file_') && !existing.file2.startsWith('file_');
+                
+                // Replace if current has cleaner names, or if both have same naming but current has higher similarity
+                if (currentHasCleanNames && !existingHasCleanNames) {
+                    pairMap.set(pairKey, pair);
+                } else if (currentHasCleanNames === existingHasCleanNames && pair.similarity > existing.similarity) {
+                    pairMap.set(pairKey, pair);
+                }
+                // Otherwise keep the existing one
+            } else {
+                // First occurrence of this pair
+                pairMap.set(pairKey, pair);
+            }
+        });
+        
+        // Return the filtered pairs as an array
+        return Array.from(pairMap.values());
+    }
+    
     renderSimplifiedSimilarityPairs(pairs, category) {
         if (pairs.length === 0) {
             return `
@@ -529,7 +570,7 @@ class MigrationManager {
                     </div>
                     <div style="text-align: center; background: #FFFFFF; padding: 1rem; border-radius: 8px; border: 2px solid #D9F6FA;">
                         <div style="font-size: 2rem; font-weight: 700; color: #002677;">
-                            ${pair.similarity}%
+                            ${Number(pair.similarity).toFixed(2)}%
                         </div>
                         <div style="font-size: 0.875rem; color: #4B4D4F; font-weight: 600;">Overall Match</div>
                     </div>
@@ -567,12 +608,33 @@ class MigrationManager {
     }
     
     renderSimplifiedMetrics(details) {
+        // Handle both traditional and ai_powered analysis formats
         const metrics = [
-            { label: 'Data Source', value: details.data_source_similarity || 0, icon: 'fas fa-database' },
-            { label: 'Filter Logic', value: details.filter_logic_similarity || 0, icon: 'fas fa-filter' },
-            { label: 'Business Purpose', value: details.business_purpose_similarity || 0, icon: 'fas fa-bullseye' },
-            { label: 'Calculations', value: details.calculation_similarity || 0, icon: 'fas fa-calculator' },
-            { label: 'Parameters', value: details.parameter_similarity || 0, icon: 'fas fa-sliders-h' }
+            { 
+                label: 'Data Source', 
+                value: details.data_source_similarity || details.data_sources || 0, 
+                icon: 'fas fa-database' 
+            },
+            { 
+                label: 'Filter Logic', 
+                value: details.filter_logic_similarity || details.query_semantics || 0, 
+                icon: 'fas fa-filter' 
+            },
+            { 
+                label: 'Business Purpose', 
+                value: details.business_purpose_similarity || details.business_logic || 0, 
+                icon: 'fas fa-bullseye' 
+            },
+            { 
+                label: 'Calculations', 
+                value: details.calculation_similarity || details.output_structure || 0, 
+                icon: 'fas fa-calculator' 
+            },
+            { 
+                label: 'Parameters', 
+                value: details.parameter_similarity || details.parameters || 0, 
+                icon: 'fas fa-sliders-h' 
+            }
         ];
         
         return metrics.map(metric => `
@@ -584,7 +646,7 @@ class MigrationManager {
                     ${metric.label}
                 </div>
                 <div style="font-size: 1.5rem; font-weight: 700; color: #002677;">
-                    ${Math.round(metric.value)}%
+                    ${Number(metric.value || 0).toFixed(2)}%
                 </div>
             </div>
         `).join('');
@@ -640,7 +702,7 @@ class MigrationManager {
                     </div>
                     <div class="similarity-score" style="text-align: center;">
                         <div style="font-size: 2rem; font-weight: 700; color: ${this.getSimilarityColor(pair.similarity)};">
-                            ${pair.similarity}%
+                            ${Number(pair.similarity).toFixed(2)}%
                         </div>
                         <div style="font-size: 0.875rem; color: var(--dark-gray);">Overall Similarity</div>
                     </div>
@@ -682,12 +744,33 @@ class MigrationManager {
     }
     
     renderSimilarityMetrics(details) {
+        // Handle both traditional and ai_powered analysis formats
         const metrics = [
-            { label: 'Data Source', value: details.data_source_similarity || 0, icon: 'fas fa-database' },
-            { label: 'Filter Logic', value: details.filter_logic_similarity || 0, icon: 'fas fa-filter' },
-            { label: 'Business Purpose', value: details.business_purpose_similarity || 0, icon: 'fas fa-bullseye' },
-            { label: 'Calculations', value: details.calculation_similarity || 0, icon: 'fas fa-calculator' },
-            { label: 'Parameters', value: details.parameter_similarity || 0, icon: 'fas fa-sliders-h' }
+            { 
+                label: 'Data Source', 
+                value: details.data_source_similarity || details.data_sources || 0, 
+                icon: 'fas fa-database' 
+            },
+            { 
+                label: 'Filter Logic', 
+                value: details.filter_logic_similarity || details.query_semantics || 0, 
+                icon: 'fas fa-filter' 
+            },
+            { 
+                label: 'Business Purpose', 
+                value: details.business_purpose_similarity || details.business_logic || 0, 
+                icon: 'fas fa-bullseye' 
+            },
+            { 
+                label: 'Calculations', 
+                value: details.calculation_similarity || details.output_structure || 0, 
+                icon: 'fas fa-calculator' 
+            },
+            { 
+                label: 'Parameters', 
+                value: details.parameter_similarity || details.parameters || 0, 
+                icon: 'fas fa-sliders-h' 
+            }
         ];
         
         return metrics.map(metric => `
@@ -701,7 +784,7 @@ class MigrationManager {
                         <div style="width: ${metric.value}%; height: 100%; background: ${this.getSimilarityColor(metric.value)}; transition: width 0.3s;"></div>
                     </div>
                     <span style="font-weight: 600; color: ${this.getSimilarityColor(metric.value)}; font-size: 0.875rem; min-width: 35px;">
-                        ${Math.round(metric.value)}%
+                        ${Number(metric.value || 0).toFixed(2)}%
                     </span>
                 </div>
             </div>
@@ -866,8 +949,9 @@ class MigrationManager {
             return;
         }
         
-        // Get the pair data
-        const pair = this.analysisResults.similarity_pairs[pairIndex];
+        // Get the pair data from filtered results
+        const filteredPairs = this.filterDuplicateAnalysisPairs(this.analysisResults.similarity_pairs);
+        const pair = filteredPairs[pairIndex];
         console.log('DEBUG: Pair data:', pair);
         const file1Queries = pair.sql_queries?.file1_queries || [];
         const file2Queries = pair.sql_queries?.file2_queries || [];
@@ -884,7 +968,7 @@ class MigrationManager {
                         ${file1} ↔ ${file2}
                     </h4>
                     <div style="background: var(--white); padding: 0.5rem 1rem; border-radius: 8px; border: 2px solid var(--primary-orange);">
-                        <span style="color: var(--navy-blue); font-weight: 700; font-size: 0.9rem;">${pair.similarity}% Overall Match</span>
+                        <span style="color: var(--navy-blue); font-weight: 700; font-size: 0.9rem;">${Number(pair.similarity).toFixed(2)}% Overall Match</span>
                     </div>
                 </div>
                 <div style="display: flex; gap: 2rem; font-size: 0.85rem; color: var(--dark-gray);">
@@ -1282,6 +1366,9 @@ class MigrationManager {
                 const renderedHTML = this.renderGeneratedFiles(filesData.files);
                 console.log('[DEBUG] Rendered HTML length:', renderedHTML.length);
                 resultsContent.innerHTML = renderedHTML;
+                
+                // Add event listeners for preview and download buttons
+                this.setupFileActionListeners();
             } else {
                 console.log('[DEBUG] No files found, showing no files message');
                 resultsContent.innerHTML = `
@@ -1313,6 +1400,27 @@ class MigrationManager {
             `;
             resultsSection.classList.remove('hidden');
         }
+    }
+    
+    setupFileActionListeners() {
+        // Add event listeners for preview buttons
+        document.querySelectorAll('.file-preview-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const filePath = btn.dataset.filePath;
+                this.previewFile(filePath);
+            });
+        });
+        
+        // Add event listeners for download buttons
+        document.querySelectorAll('.file-download-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const filePath = btn.dataset.filePath;
+                const fileName = btn.dataset.fileName;
+                this.downloadFile(filePath, fileName);
+            });
+        });
     }
     
     renderGeneratedFiles(files) {
@@ -1376,11 +1484,11 @@ class MigrationManager {
                 </div>
                 
                 <div style="display: flex; gap: 0.5rem;">
-                    <button onclick="migrationManager.previewFile('${file.path}')" style="background: #FF612B; color: #FFFFFF; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer; flex: 1;">
+                    <button class="file-preview-btn" data-file-path="${file.path}" style="background: #FF612B; color: #FFFFFF; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer; flex: 1;">
                         <i class="fas fa-eye" style="margin-right: 0.25rem;"></i>
                         Preview
                     </button>
-                    <button onclick="migrationManager.downloadFile('${file.path}', '${file.name}')" style="background: #FFFFFF; color: #002677; border: 2px solid #002677; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer; flex: 1;">
+                    <button class="file-download-btn" data-file-path="${file.path}" data-file-name="${file.name}" style="background: #FFFFFF; color: #002677; border: 2px solid #002677; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer; flex: 1;">
                         <i class="fas fa-download" style="margin-right: 0.25rem;"></i>
                         Download
                     </button>
@@ -1447,7 +1555,7 @@ class MigrationManager {
             
             // trigger file download
             const fileLink = document.createElement('a');
-            fileLink.href = `/rdlmigration/api/results/${jobId}/download/${filePath}`;
+            fileLink.href = `/rdlmigration/api/results/${jobId}/download/${encodeURIComponent(filePath)}`;
             fileLink.download = fileName;
             
             document.body.appendChild(fileLink);
@@ -1466,7 +1574,7 @@ class MigrationManager {
             const jobId = this.currentJobId.replace('_migration', '');
             
             // build URL with context param if needed
-            let previewUrl = `/rdlmigration/api/results/${jobId}/preview/${filePath}`;
+            let previewUrl = `/rdlmigration/api/results/${jobId}/preview/${encodeURIComponent(filePath)}`;
             if (contextFile) {
                 previewUrl += `?context_file=${encodeURIComponent(contextFile)}`;
             }
@@ -1579,7 +1687,7 @@ class MigrationManager {
     
     async getContextualPreview(filePath, contextFile) {
         const resultJobId = this.currentJobId.replace('_migration', '');
-        let previewUrl = `/rdlmigration/api/results/${resultJobId}/preview/${filePath}`;
+        let previewUrl = `/rdlmigration/api/results/${resultJobId}/preview/${encodeURIComponent(filePath)}`;
         if (contextFile) {
             previewUrl += `?context_file=${encodeURIComponent(contextFile)}`;
         }
@@ -2066,8 +2174,8 @@ ORDER BY o.OrderDate DESC`
                         <div class="matrix-cell" 
                              style="background-color: ${color}; color: ${textColor};"
                              onclick="migrationManager.showPairDetails('${rowFile}', '${colFile}', ${similarity})"
-                             title="Similarity: ${similarity.toFixed(1)}%">
-                            ${similarity > 0 ? similarity.toFixed(0) + '%' : '—'}
+                             title="Similarity: ${similarity.toFixed(2)}%">
+                            ${similarity > 0 ? similarity.toFixed(2) + '%' : '—'}
                         </div>
                     `;
                 }

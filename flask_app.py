@@ -48,10 +48,10 @@ try:
         get_service_status
     )
     WINDOWS_SERVICE_AVAILABLE = True
-    print("✅ Windows Service integration available")
+    print("SUCCESS: Windows Service integration available")
 except ImportError:
     WINDOWS_SERVICE_AVAILABLE = False
-    print("⚠️  Windows Service integration not available - using threading fallback")
+    print("WARNING: Windows Service integration not available - using threading fallback")
 
 app = Flask(__name__)  # Enable built-in static handling
 app.config.from_object(Config)
@@ -71,10 +71,10 @@ def after_request(response):
 
 # Configure LLM with OpenAI client
 if llm:
-    print("✅ LLM client initialized successfully. AI-powered analysis enabled.")
+    print("SUCCESS: LLM client initialized successfully. AI-powered analysis enabled.")
     USE_AI = True
 else:
-    print("⚠️  Warning: LLM client not initialized. Using basic similarity analysis.")
+    print("WARNING: LLM client not initialized. Using basic similarity analysis.")
     print("   - Set OPENAI_API_KEY environment variable to enable AI features")
     USE_AI = False
 
@@ -1275,9 +1275,9 @@ def initialize_services():
     if WINDOWS_SERVICE_AVAILABLE:
         try:
             start_background_service()
-            print("✅ Windows Service background processing started")
+            print("SUCCESS: Windows Service background processing started")
         except Exception as e:
-            print(f"⚠️  Failed to start Windows Service: {e}")
+            print(f"WARNING: Failed to start Windows Service: {e}")
             print("Falling back to threading-based processing")
 
 # Register the initialization function to run before first request (Flask 2.2+ compatible)
@@ -1729,9 +1729,9 @@ def cleanup_services():
     if WINDOWS_SERVICE_AVAILABLE:
         try:
             stop_background_service()
-            print("✅ Windows Service stopped cleanly")
+            print("SUCCESS: Windows Service stopped cleanly")
         except Exception as e:
-            print(f"⚠️  Error stopping Windows Service: {e}")
+            print(f"WARNING: Error stopping Windows Service: {e}")
 
 atexit.register(cleanup_services)
 
@@ -1740,23 +1740,23 @@ def create_app():
     return app
 
 if __name__ == '__main__':
-    print("🚀 Starting Enterprise RDL Migration Web Application")
-    print("📊 Features: Bulk Upload, AI Analysis, Real-time Progress")
+    print("Starting Enterprise RDL Migration Web Application")
+    print("Features: Bulk Upload, AI Analysis, Real-time Progress")
     
     if WINDOWS_SERVICE_AVAILABLE:
-        print("🔧 Background Processing: Windows Service")
+        print("Background Processing: Windows Service")
     else:
-        print("🔧 Background Processing: Threading (Development Mode)")
+        print("Background Processing: Threading (Development Mode)")
     
     # Read configuration directly from environment variables
     host = os.getenv('HOST', '127.0.0.1')
-    port = int(os.getenv('PORT', 5000))
+    port = int(os.getenv('PORT', 5002))
     debug = os.getenv('FLASK_DEBUG', 'true').lower() == 'true'
     base_url = os.getenv('BASE_URL_PATH', '/rdlmigration')
     
-    print(f"🌐 Access at: http://{host}:{port}{base_url}")
-    print(f"📂 Base URL Path: {base_url}")
-    print(f"🔧 Debug Mode: {debug}")
+    print(f"Access at: http://{host}:{port}{base_url}")
+    print(f"Base URL Path: {base_url}")
+    print(f"Debug Mode: {debug}")
     
     # Start the application
     socketio.run(app, debug=debug, host=host, port=port, use_reloader=debug)

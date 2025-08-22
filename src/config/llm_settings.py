@@ -38,10 +38,8 @@ def get_llm():
         
         return ChatOpenAI(
             model="gpt-4o",
-            openai_api_key=current_api_key,
             temperature=0.5,
-            max_tokens=16000,
-            request_timeout=120
+            max_tokens=16000
         )
         
     except Exception as e:
@@ -67,9 +65,7 @@ def get_embedding_model():
             return None
         
         return OpenAIEmbeddings(
-            model="text-embedding-3-large",
-            openai_api_key=current_api_key,
-            dimensions=3072
+            model="text-embedding-3-large"
         )
         
     except Exception as e:
@@ -104,14 +100,14 @@ def _initialize_clients():
         
         # Verify initialization
         if llm:
-            logger.info("✅ LLM client initialized successfully")
+            logger.info("SUCCESS: LLM client initialized successfully")
         else:
-            logger.error("❌ Failed to initialize LLM client")
+            logger.error("ERROR: Failed to initialize LLM client")
             
         if embedding_model:
-            logger.info("✅ Embedding model initialized successfully")
+            logger.info("SUCCESS: Embedding model initialized successfully")
         else:
-            logger.error("❌ Failed to initialize embedding model")
+            logger.error("ERROR: Failed to initialize embedding model")
 
 # Try initial initialization
 llm = None

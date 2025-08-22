@@ -266,14 +266,14 @@ class RDLBusinessAnalyzer:
             'business_purpose_similarity': self._compare_business_purpose(context1, context2)
         }
         
-        # Calculate weighted overall similarity - prioritize data source compatibility
+        # Calculate weighted overall similarity - prioritize business domain separation
         weights = {
-            'data_source_similarity': 0.40,      # data compatibility crucial for consolidation
-            'business_purpose_similarity': 0.20, # reduced from 0.25
-            'filter_logic_similarity': 0.20,     # reduced from 0.25 
-            'output_purpose_similarity': 0.10,   # reduced from 0.20
-            'calculation_similarity': 0.07,      # reduced from 0.15
-            'parameter_similarity': 0.03         # reduced from 0.05
+            'data_source_similarity': 0.30,      # important but not dominant
+            'business_purpose_similarity': 0.35, # INCREASED - different business purposes should separate reports
+            'filter_logic_similarity': 0.15,     # reduced
+            'output_purpose_similarity': 0.15,   # increased - different outputs indicate different purposes
+            'calculation_similarity': 0.03,      # reduced
+            'parameter_similarity': 0.02         # reduced
         }
         
         overall_similarity = sum(
@@ -461,8 +461,15 @@ class RDLBusinessAnalyzer:
                 # weight both database and domain compatibility
                 return (db_similarity * 0.3) + (domain_compat * 100 * 0.7)
             else:
-                # fallback to simple table overlap
+                # fallback to simple table overlap with domain analysis
                 table_overlap = len(set(tables1) & set(tables2)) / len(set(tables1) | set(tables2)) if (tables1 or tables2) else 0
+                
+                # Basic domain detection for tables
+                domain_compatible = self._are_tables_domain_compatible(tables1, tables2)
+                if not domain_compatible:
+                    # Heavily penalize different domains
+                    return min(25.0, (db_similarity * 0.2) + (table_overlap * 100 * 0.2))
+                
                 return (db_similarity * 0.3) + (table_overlap * 100 * 0.7)
         
         # if no tables found, just use database similarity
@@ -568,27 +575,29 @@ class RDLBusinessAnalyzer:
     def _compare_business_domains(self, fields1: List[str], fields2: List[str]) -> float:
         """Compare business domains based on field semantics"""
         
-        # Define business domain keywords
+        # Define business domain keywords - more comprehensive and specific
         domain_keywords = {
-            'sales': ['sale', 'revenue', 'price', 'quantity', 'product', 'order', 'invoice'],
-            'customer': ['customer', 'client', 'contact', 'email', 'phone', 'address', 'name'],
-            'financial': ['amount', 'cost', 'profit', 'expense', 'budget', 'payment'],
-            'inventory': ['stock', 'warehouse', 'item', 'category', 'supplier'],
-            'hr': ['employee', 'staff', 'department', 'salary', 'hire', 'position'],
-            'analytics': ['count', 'sum', 'average', 'total', 'percentage', 'ratio']
+            'sales': ['sale', 'revenue', 'price', 'quantity', 'product', 'order', 'invoice', 'sales', 'sold', 'selling', 'purchase'],
+            'customer': ['customer', 'client', 'contact', 'email', 'phone', 'address', 'name', 'customers'],
+            'financial': ['amount', 'cost', 'profit', 'expense', 'budget', 'payment', 'financial', 'money', 'dollar', 'currency'],
+            'inventory': ['stock', 'warehouse', 'item', 'category', 'supplier', 'inventory', 'reorder', 'stocking', 'supply'],
+            'hr': ['employee', 'staff', 'department', 'salary', 'hire', 'position', 'human', 'resource', 'payroll'],
+            'analytics': ['count', 'sum', 'average', 'total', 'percentage', 'ratio', 'analysis', 'metric', 'kpi'],
+            'operations': ['process', 'operation', 'workflow', 'task', 'activity', 'production', 'manufacturing'],
+            'marketing': ['campaign', 'lead', 'prospect', 'marketing', 'promotion', 'advertisement', 'channel']
         }
         
         # Determine domain for each field set
         domain1 = self._classify_field_domain(fields1, domain_keywords)
         domain2 = self._classify_field_domain(fields2, domain_keywords)
         
-        # If same domain, high similarity; if different, low similarity
+        # If same domain, high similarity; if different, very low similarity
         if domain1 == domain2 and domain1 != 'unknown':
-            return 90.0
+            return 85.0
         elif domain1 != 'unknown' and domain2 != 'unknown' and domain1 != domain2:
-            return 10.0  # Different business domains
+            return 5.0   # VERY LOW - Different business domains should not be consolidated
         else:
-            return 50.0  # Unknown domain
+            return 25.0  # Unknown domain - conservative approach
     
     def _classify_field_domain(self, fields: List[str], domain_keywords: Dict[str, List[str]]) -> str:
         """Classify fields into business domain"""
@@ -603,6 +612,32 @@ class RDLBusinessAnalyzer:
         if domain_scores:
             return max(domain_scores, key=domain_scores.get)
         return 'unknown'
+    
+    def _are_tables_domain_compatible(self, tables1: List[str], tables2: List[str]) -> bool:
+        """Check if table sets belong to compatible business domains"""
+        # Define table name patterns for different domains
+        domain_patterns = {
+            'sales': ['sales', 'order', 'invoice', 'product', 'customer'],
+            'inventory': ['inventory', 'stock', 'warehouse', 'item', 'supplier'],
+            'hr': ['employee', 'staff', 'department', 'payroll', 'hire'],
+            'financial': ['finance', 'accounting', 'budget', 'expense', 'payment'],
+            'operations': ['production', 'manufacturing', 'operation', 'process']
+        }
+        
+        def classify_tables(tables):
+            table_text = ' '.join([t.lower() for t in tables])
+            scores = {}
+            for domain, patterns in domain_patterns.items():
+                score = sum(1 for pattern in patterns if pattern in table_text)
+                if score > 0:
+                    scores[domain] = score
+            return max(scores, key=scores.get) if scores else 'unknown'
+        
+        domain1 = classify_tables(tables1)
+        domain2 = classify_tables(tables2)
+        
+        # Same domain or one is unknown = compatible
+        return domain1 == domain2 or domain1 == 'unknown' or domain2 == 'unknown'
     
     def _infer_business_purpose(self, filters: List[BusinessFilter], 
                               calculations: List[BusinessCalculation], 
