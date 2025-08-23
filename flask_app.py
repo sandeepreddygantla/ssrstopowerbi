@@ -762,6 +762,7 @@ def get_results_history():
     """Get list of all previous migration results"""
     try:
         results_dir = Path(Config.RESULTS_FOLDER)
+        uploads_dir = Path(Config.UPLOAD_FOLDER)
         if not results_dir.exists():
             return jsonify({'results': []})
         
@@ -769,34 +770,58 @@ def get_results_history():
         for job_dir in results_dir.iterdir():
             if job_dir.is_dir():
                 try:
+                    # Count actual RDL files from uploads directory if it exists
+                    rdl_count = 0
+                    corresponding_upload_dir = uploads_dir / job_dir.name
+                    if corresponding_upload_dir.exists():
+                        rdl_count = len(list(corresponding_upload_dir.glob('*.rdl')))
+                    else:
+                        # Fallback: count report directories in results (excluding guides)
+                        report_dirs = [d for d in job_dir.iterdir() if d.is_dir() and d.name != 'guides']
+                        rdl_count = len(report_dirs)
+                    
+                    # Check if migration was successful by looking for generated files
+                    has_m_files = any(f.suffix == '.m' for f in job_dir.rglob('*'))
+                    has_dax_files = any(f.suffix == '.dax' for f in job_dir.rglob('*'))
+                    is_successful = has_m_files or has_dax_files or (job_dir / 'ai_analysis_results.json').exists()
+                    
                     # Get job metadata
                     job_info = {
                         'job_id': job_dir.name,
                         'created': job_dir.stat().st_ctime,
                         'modified': job_dir.stat().st_mtime,
-                        'file_count': len(list(job_dir.rglob('*'))),
-                        'size': sum(f.stat().st_size for f in job_dir.rglob('*') if f.is_file())
+                        'file_count': rdl_count,
+                        'size': sum(f.stat().st_size for f in job_dir.rglob('*') if f.is_file()),
+                        'successful': is_successful
                     }
                     
                     # Try to determine job type from directory structure
-                    if any(f.suffix == '.m' for f in job_dir.rglob('*')):
+                    if has_m_files:
                         job_info['type'] = 'migration'
                     else:
                         job_info['type'] = 'analysis'
                     
                     results.append(job_info)
-                except Exception:
+                except Exception as e:
+                    app.logger.error(f"Error processing job directory {job_dir.name}: {str(e)}")
                     continue
         
         # Sort by creation time (newest first)
         results.sort(key=lambda x: x['created'], reverse=True)
         
+        # Calculate overall stats
+        total_files = sum(r['file_count'] for r in results)
+        successful_jobs = sum(1 for r in results if r.get('successful', False))
+        
         return jsonify({
             'results': results,
-            'total': len(results)
+            'total': len(results),
+            'total_files': total_files,
+            'successful_jobs': successful_jobs
         })
     
     except Exception as e:
+        app.logger.error(f"Error in get_results_history: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 def convert_markdown_to_html(markdown_content):
@@ -1749,7 +1774,7 @@ if __name__ == '__main__':
         print("Background Processing: Threading (Development Mode)")
     
     # Read configuration directly from environment variables
-    host = os.getenv('HOST', '127.0.0.1')
+    host = os.getenv('HOST', '0.0.0.0')
     port = int(os.getenv('PORT', 5002))
     debug = os.getenv('FLASK_DEBUG', 'true').lower() == 'true'
     base_url = os.getenv('BASE_URL_PATH', '/rdlmigration')

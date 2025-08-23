@@ -597,38 +597,59 @@
         
         init() {
             this.loadStatistics();
+            // Refresh statistics every 30 seconds
+            setInterval(() => this.loadStatistics(), 30000);
         }
         
         async loadStatistics() {
             try {
+                console.log('📊 Loading dashboard statistics...');
+                
                 // Load statistics from API
                 const response = await fetch('/rdlmigration/api/results/history');
                 const data = await response.json();
                 
-                if (response.ok && data.results) {
-                    const results = data.results;
-                    const totalFiles = results.reduce((sum, job) => sum + job.file_count, 0);
-                    const totalJobs = results.length;
-                    const successRate = totalJobs > 0 ? Math.round((totalJobs / totalJobs) * 100) : 0;
-                    const timeSaved = Math.round(totalFiles * 0.5); // Estimate 30 minutes saved per file
+                console.log('📊 API Response:', data);
+                
+                if (response.ok && data) {
+                    // Use the pre-calculated totals from the API
+                    const totalFiles = data.total_files || 0;
+                    const totalJobs = data.total || 0;
+                    const successfulJobs = data.successful_jobs || 0;
                     
+                    // Calculate success rate properly
+                    const successRate = totalJobs > 0 ? Math.round((successfulJobs / totalJobs) * 100) : 100;
+                    
+                    // Estimate time saved (30 minutes per file)
+                    const timeSaved = Math.round(totalFiles * 0.5);
+                    
+                    console.log('📊 Stats calculated:', {
+                        totalFiles,
+                        totalJobs,
+                        successfulJobs,
+                        successRate,
+                        timeSaved
+                    });
+                    
+                    // Update the UI
                     document.getElementById('total-files').textContent = totalFiles.toLocaleString();
                     document.getElementById('total-jobs').textContent = totalJobs.toLocaleString();
                     document.getElementById('success-rate').textContent = successRate + '%';
                     document.getElementById('time-saved').textContent = timeSaved.toLocaleString();
                 } else {
+                    console.warn('📊 No results data or response not OK');
                     // Default values
                     document.getElementById('total-files').textContent = '0';
                     document.getElementById('total-jobs').textContent = '0';
-                    document.getElementById('success-rate').textContent = '100%';
+                    document.getElementById('success-rate').textContent = '0%';
                     document.getElementById('time-saved').textContent = '0';
                 }
             } catch (error) {
-                console.error('Error loading statistics:', error);
+                console.error('📊 Error loading statistics:', error);
                 // Set default values on error
                 document.getElementById('total-files').textContent = '0';
                 document.getElementById('total-jobs').textContent = '0';
-                document.getElementById('success-rate').textContent = '100%';
+                document.getElementById('success-rate').textContent = '0%';
                 document.getElementById('time-saved').textContent = '0';
             }
         }
@@ -640,7 +661,6 @@
             'This feature will provide a guided tour of the migration process, including file upload, similarity analysis, and Power BI conversion. Stay tuned for the interactive demo!',
             'Quick Demo Coming Soon'
         );
-    }
     }
     
     // Initialize dashboard when page loads
